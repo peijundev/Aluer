@@ -32,7 +32,7 @@ public class ServerGuardConfig {
 
     public static class MinecraftConfig {
         private String serviceName = "minecraft";
-        private String processName = "java";
+        private String processName = "paper-1.21.11";
         private String jarFile = "paper-1.21.11.jar";
         private String workingDir = "/opt/minecraft";
         private String javaOpts = "-Xms4G -Xmx4G";

@@ -5,7 +5,7 @@ serverguard:
 
   minecraft:
     service-name: minecraft
-    process-name: paper-1.21.11.jar
+    process-name: paper-1.21.11
     jar-file: paper-1.21.11.jar
     working-dir: /opt/minecraft
     java-opts: -Xms4G -Xmx4G

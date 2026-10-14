@@ -52,15 +52,17 @@ public class ResourceMonitor {
         return data;
     }
 
+    /**
+     * 定位 Minecraft 服务器进程的 PID。
+     *
+     * 采用 JDK 原生 ProcessHandle API，识别命令行中包含 processName / jarFile
+     * 关键词的服务器进程，并排除 Aluer 自身 JVM，返回其 PID 字符串。
+     */
     private String findJavaProcess() {
         try {
-            ProcessBuilder pb = new ProcessBuilder("pgrep", "-f", config.getMinecraft().getProcessName());
-            pb.redirectErrorStream(true);
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String pid = reader.readLine();
-            p.waitFor();
-            return pid != null ? pid.trim() : "";
+            return MinecraftProcessDetector.findProcess(config)
+                .map(String::valueOf)
+                .orElse("");
         } catch (Exception e) {
             return "";
         }

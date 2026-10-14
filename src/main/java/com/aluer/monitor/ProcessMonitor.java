@@ -7,10 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -24,22 +20,17 @@ public class ProcessMonitor {
         this.config = config;
     }
 
+    /**
+     * 判断 Minecraft 服务器进程是否正在运行。
+     *
+     * 采用 JDK 原生 ProcessHandle API 遍历系统进程，识别命令行中包含
+     * processName / jarFile 关键词的服务器进程，并排除 Aluer 自身 JVM。
+     * 相比 pgrep -f：不依赖外部命令、不做正则模糊匹配，能可靠识别
+     * 带 build 号（如 paper-1.21.11-113.jar）的进程。
+     */
     public boolean isProcessRunning() {
-        String processName = config.getMinecraft().getProcessName();
         try {
-            ProcessBuilder pb = new ProcessBuilder("pgrep", "-f", processName);
-            pb.redirectErrorStream(true);
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            List<String> pids = new ArrayList<>();
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    pids.add(line.trim());
-                }
-            }
-            p.waitFor(5, TimeUnit.SECONDS);
-            processRunning = !pids.isEmpty();
+            processRunning = MinecraftProcessDetector.isRunning(config);
         } catch (Exception e) {
             logger.warn("Failed to check process status: {}", e.getMessage());
             processRunning = false;
