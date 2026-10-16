@@ -11,6 +11,14 @@
 
     <name>Aluer ServerGuard</name>
     <description>AI-powered multi-platform Minecraft Server Protection System (Spigot/Paper/Purpur/Folia, Minecraft 1.12.2+)</description>
+    <url>https://github.com/ZpjDev/Aluer</url>
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
