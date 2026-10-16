@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Tests (323)" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="All Tests" type="JUnit" factoryName="JUnit">
     <module name="serverguard" />
     <option name="TEST_OBJECT" value="pattern" />
     <option name="VM_PARAMETERS" value="-ea" />
@@ -7,6 +7,8 @@
       <pattern testClass="com.aluer.security.*" />
       <pattern testClass="com.aluer.kernel.*" />
       <pattern testClass="com.aluer.console.*" />
+      <pattern testClass="com.aluer.platform.*" />
+      <pattern testClass="com.aluer.pluginsystem.*" />
     </patterns>
     <method v="2">
       <option name="Make" enabled="true" />
