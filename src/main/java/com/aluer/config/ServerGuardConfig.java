@@ -33,8 +33,10 @@ public class ServerGuardConfig {
 
     public static class MinecraftConfig {
         private String serviceName = "minecraft";
-        private String processName = "paper-1.21.11";
-        private String jarFile = "paper-1.21.11.jar";
+        /** 进程命令行匹配关键词；留空则由进程定位器按已知核心名（paper/spigot/purpur/folia/forge/fabric 等）自动识别 */
+        private String processName = "";
+        /** 服务器 JAR 文件名关键词；留空则自动识别，不绑定具体平台与版本 */
+        private String jarFile = "";
         private String workingDir = "/opt/minecraft";
         private String javaOpts = "-Xms4G -Xmx4G";
         private int checkIntervalSeconds = 5;
@@ -534,7 +536,7 @@ public class ServerGuardConfig {
         private List<String> monitoredPaths = new ArrayList<>(List.of(
             "/opt/minecraft/plugins",
             "/opt/minecraft/server.properties",
-            "/opt/minecraft/paper-1.21.11.jar",
+            "/opt/minecraft/server.jar",
             "/opt/minecraft/start.sh",
             "/etc/systemd/system/minecraft.service"
         ));
@@ -831,7 +833,7 @@ public class ServerGuardConfig {
     public static class DashboardConfig {
         private boolean enabled = true;
         private String title = "Aluer Nebula Console";
-        private String subtitle = "PaperMC defense, recovery, and remote operations fabric";
+        private String subtitle = "Minecraft multi-platform defense, recovery, and remote operations fabric";
         private int refreshIntervalSeconds = 6;
         private boolean compactTerminal = true;
         private SshGatewayConfig sshGateway = new SshGatewayConfig();

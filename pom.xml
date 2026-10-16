@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>Aluer ServerGuard</name>
-    <description>AI-powered Minecraft PaperMC Server Protection System</description>
+    <description>AI-powered multi-platform Minecraft Server Protection System (Spigot/Paper/Purpur/Folia, Minecraft 1.12.2+)</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

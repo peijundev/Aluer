@@ -31,6 +31,18 @@ public final class MinecraftProcessDetector {
     private static final Pattern JAR_ARG_PATTERN =
             Pattern.compile("(?i)-jar\\s+([^\\s]+\\.jar)");
 
+    /**
+     * 已知 Minecraft 服务端核心名特征。
+     *
+     * <p>用于在用户未显式配置 processName / jarFile 时的通用识别，
+     * 覆盖 Bukkit 系（Paper/Spigot/Purpur/Pufferfish/Folia/CraftBukkit/Glowstone）、
+     * 混合端（Mohist/Arclight）与模组加载器（Forge/NeoForge/Fabric/Sponge）。</p>
+     */
+    private static final List<String> KNOWN_SERVER_CORE_MARKERS = List.of(
+            "paper", "spigot", "purpur", "pufferfish", "folia",
+            "craftbukkit", "glowstone", "mohist", "arclight",
+            "forge", "neoforge", "fabric", "sponge");
+
     private MinecraftProcessDetector() {
         // 纯静态工具类，禁止实例化
     }
@@ -130,6 +142,7 @@ public final class MinecraftProcessDetector {
      *   <li>{@code jarFile} 精确子串命中。</li>
      *   <li>{@code -jar} 参数提取出的 JAR 名与配置 JAR 名归一化相等（解决 build 号差异）。</li>
      *   <li>{@code jarFile} 归一化后的基础名字串命中（兜底）。</li>
+     *   <li>未显式配置关键词时，按已知核心名特征做通用识别。</li>
      * </ol>
      */
     static boolean commandLineMatches(String commandLine, String processName, String jarFile) {
@@ -137,21 +150,28 @@ public final class MinecraftProcessDetector {
             // 无命令行信息（权限不足或进程已退出），无法判定
             return false;
         }
+        // 是否显式配置了匹配关键词（配置了则走精确匹配，不启用通用识别）
+        boolean hasExplicitKeyword = (processName != null && !processName.isBlank())
+                || (jarFile != null && !jarFile.isBlank());
+
         if (processName != null && !processName.isBlank() && commandLine.contains(processName)) {
             return true;
         }
-        if (jarFile == null || jarFile.isBlank()) {
-            return false;
+        if (jarFile != null && !jarFile.isBlank()) {
+            if (commandLine.contains(jarFile)) {
+                return true;
+            }
+            String actualJar = extractJarName(commandLine);
+            if (actualJar != null && jarNamesMatch(jarFile, actualJar)) {
+                return true;
+            }
+            String jarBase = normalizeJarName(jarFile);
+            if (!jarBase.isBlank() && commandLine.contains(jarBase)) {
+                return true;
+            }
         }
-        if (commandLine.contains(jarFile)) {
-            return true;
-        }
-        String actualJar = extractJarName(commandLine);
-        if (actualJar != null && jarNamesMatch(jarFile, actualJar)) {
-            return true;
-        }
-        String jarBase = normalizeJarName(jarFile);
-        return !jarBase.isBlank() && commandLine.contains(jarBase);
+        // 未显式配置关键词时，按已知 Minecraft 核心特征做通用识别
+        return !hasExplicitKeyword && looksLikeMinecraftServer(commandLine);
     }
 
     /**
@@ -215,6 +235,30 @@ public final class MinecraftProcessDetector {
         String a = normalizeJarName(configuredJar);
         String b = normalizeJarName(actualJar);
         return !a.isBlank() && a.equalsIgnoreCase(b);
+    }
+
+    /**
+     * 判断命令行是否「看起来像」Minecraft 服务器进程（通用特征识别）。
+     *
+     * <p>当用户未显式配置 processName / jarFile 时作为兜底识别：
+     * 命令行需包含 {@code .jar}（jar 启动），且命中已知核心名特征
+     * （paper/spigot/purpur/folia/forge/fabric 等）即判定为服务器进程。
+     * 这样即便不预先填写具体核心 JAR 名，也能跨平台、跨版本定位服务器。</p>
+     */
+    static boolean looksLikeMinecraftServer(String commandLine) {
+        if (commandLine == null || commandLine.isBlank()) {
+            return false;
+        }
+        String lower = commandLine.toLowerCase();
+        if (!lower.contains(".jar")) {
+            return false;
+        }
+        for (String marker : KNOWN_SERVER_CORE_MARKERS) {
+            if (lower.contains(marker)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // ─── 结果类 ────────────────────────────────────────

@@ -9,7 +9,7 @@ ${AnsiColor.BRIGHT_CYAN}    ╔════════════════�
     ║      ╚═╝  ╚═╝╚══════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝            ║
     ║                                                            ║
     ║       ${AnsiColor.BRIGHT_YELLOW}Aluer ServerGuard V5.0.0${AnsiColor.BRIGHT_CYAN}                        ║
-    ║       ${AnsiColor.BRIGHT_GREEN}AI-Powered Minecraft PaperMC Server Protection${AnsiColor.BRIGHT_CYAN}   ║
+    ║       ${AnsiColor.BRIGHT_GREEN}AI-Powered Minecraft Multi-Platform Protection${AnsiColor.BRIGHT_CYAN}    ║
     ║       ${AnsiColor.BRIGHT_MAGENTA}135+ Security Modules | 100% Anti-Cheat Coverage${AnsiColor.BRIGHT_CYAN}      ║
     ║                                                            ║
     ╚════════════════════════════════════════════════════════════╝${AnsiStyle.NORMAL}

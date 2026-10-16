@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Aluer ServerGuard — PaperMC 轻量 Agent 插件
+ * Aluer ServerGuard — 多平台 Bukkit 系轻量 Agent 插件
  *
  * 本插件不嵌入 Spring Boot，而是作为数据采集前端：
  * 1. 注册 Bukkit 事件监听器，拦截服务器内部所有关键事件
@@ -25,8 +25,9 @@ import org.slf4j.LoggerFactory;
  *   ServerGuard Server → (WebSocket) → AgentWebSocketClient → InternalCommandExecutor → Bukkit API
  *
  * 部署要求：
- *   - 打包为 Paper 插件 JAR，放入 plugins/ 目录
- *   - 外部 ServerGuard 必须先于 Paper 服务器启动
+ *   - 打包为 Bukkit 插件 JAR，放入 plugins/ 目录
+ *   - 兼容 Spigot / Paper / Purpur / Folia 及 Minecraft 1.12.2+ 全版本
+ *   - 外部 ServerGuard 必须先于游戏服务器启动
  *   - 默认连接 ws://localhost:8080/agent
  */
 public class AluerPlugin extends JavaPlugin {

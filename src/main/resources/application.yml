@@ -10,8 +10,9 @@ serverguard:
 
   minecraft:
     service-name: minecraft
-    process-name: paper-1.21.11
-    jar-file: paper-1.21.11.jar
+    # 进程/JAR 匹配关键词：留空则由进程定位器按已知核心名（paper/spigot/purpur/folia/forge/fabric 等）自动识别
+    process-name: ""
+    jar-file: ""
     working-dir: /opt/minecraft
     java-opts: -Xms4G -Xmx4G
     check-interval-seconds: 5
@@ -280,7 +281,7 @@ serverguard:
   dashboard:
     enabled: true
     title: Aluer Nebula Console
-    subtitle: PaperMC defense, recovery, and remote operations fabric
+    subtitle: Minecraft multi-platform defense, recovery, and remote operations fabric
     refresh-interval-seconds: 6
     compact-terminal: true
     ssh-gateway:

@@ -112,4 +112,49 @@ class MinecraftProcessDetectorTest {
         assertFalse(MinecraftProcessDetector.commandLineMatches("", "minecraft", "paper.jar"));
         assertFalse(MinecraftProcessDetector.commandLineMatches(null, "minecraft", "paper.jar"));
     }
+
+    // ─── looksLikeMinecraftServer（通用识别） ──────────
+
+    @Test
+    void looksLikeMinecraftServerRecognizesKnownCores() {
+        assertTrue(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar paper-1.21.1-116.jar nogui"));
+        assertTrue(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar spigot-1.12.2.jar nogui"));
+        assertTrue(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar purpur-1.21.1.jar"));
+        assertTrue(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar folia-1.21.1.jar"));
+        assertTrue(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar fabric-server-launch.jar"));
+        assertTrue(MinecraftProcessDetector.looksLikeMinecraftServer("java @args -jar forge-1.20.1-shim.jar"));
+    }
+
+    @Test
+    void looksLikeMinecraftServerRejectsNonMinecraft() {
+        assertFalse(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar velocity-3.3.0.jar"));
+        assertFalse(MinecraftProcessDetector.looksLikeMinecraftServer("java -jar myapp.jar"));
+        assertFalse(MinecraftProcessDetector.looksLikeMinecraftServer("java Main"));
+        assertFalse(MinecraftProcessDetector.looksLikeMinecraftServer(null));
+        assertFalse(MinecraftProcessDetector.looksLikeMinecraftServer(""));
+    }
+
+    // ─── 空关键词通用识别 ──────────────────────────────
+
+    @Test
+    void commandLineMatchesWithBlankKeywordsUsesGenericDetection() {
+        // 未配置任何关键词时，按已知核心名自动识别
+        assertTrue(MinecraftProcessDetector.commandLineMatches(
+                "java -jar paper-1.21.1-116.jar nogui", "", ""));
+        assertTrue(MinecraftProcessDetector.commandLineMatches(
+                "java -jar fabric-server-launch.jar", null, null));
+    }
+
+    @Test
+    void commandLineMatchesWithBlankKeywordsRejectsProxy() {
+        assertFalse(MinecraftProcessDetector.commandLineMatches(
+                "java -jar velocity-3.3.0.jar", "", ""));
+    }
+
+    @Test
+    void commandLineMatchesWithExplicitKeywordDoesNotUseGenericDetection() {
+        // 显式配置了关键词（velocity），即使命令行是 paper 服务器，也应精确匹配失败而不兜底通用识别
+        assertFalse(MinecraftProcessDetector.commandLineMatches(
+                "java -jar paper-1.21.1.jar nogui", "velocity", "velocity-3.3.0.jar"));
+    }
 }

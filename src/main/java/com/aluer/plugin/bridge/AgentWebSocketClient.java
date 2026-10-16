@@ -16,7 +16,7 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
- * Agent WebSocket 客户端 — 运行在 Paper 插件内部
+ * Agent WebSocket 客户端 — 运行在 Bukkit 系插件内部（Spigot/Paper/Purpur/Folia 等）
  *
  * 职责：
  * 1. 建立与外部 ServerGuard Server 的 WebSocket 长连接
