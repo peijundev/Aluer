@@ -14,6 +14,9 @@ serverguard:
     process-name: ""
     jar-file: ""
     working-dir: /opt/minecraft
+    # 启动时自动注入监控 Agent 插件到服务端 plugins/ 目录
+    auto-inject: true
+    agent-jar-name: serverguard-agent.jar
     java-opts: -Xms4G -Xmx4G
     check-interval-seconds: 5
     rcon:

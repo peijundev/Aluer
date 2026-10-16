@@ -40,6 +40,10 @@ public class ServerGuardConfig {
         private String workingDir = "/opt/minecraft";
         private String javaOpts = "-Xms4G -Xmx4G";
         private int checkIntervalSeconds = 5;
+        /** 是否在引擎启动时自动注入 Agent 插件到服务端 plugins 目录 */
+        private boolean autoInject = true;
+        /** 注入的 Agent 插件 JAR 文件名 */
+        private String agentJarName = "serverguard-agent.jar";
         private RconConfig rcon = new RconConfig();
 
         public String getServiceName() { return serviceName; }
@@ -54,6 +58,10 @@ public class ServerGuardConfig {
         public void setJavaOpts(String javaOpts) { this.javaOpts = javaOpts; }
         public int getCheckIntervalSeconds() { return checkIntervalSeconds; }
         public void setCheckIntervalSeconds(int checkIntervalSeconds) { this.checkIntervalSeconds = checkIntervalSeconds; }
+        public boolean isAutoInject() { return autoInject; }
+        public void setAutoInject(boolean autoInject) { this.autoInject = autoInject; }
+        public String getAgentJarName() { return agentJarName; }
+        public void setAgentJarName(String agentJarName) { this.agentJarName = agentJarName; }
         public RconConfig getRcon() { return rcon; }
         public void setRcon(RconConfig rcon) { this.rcon = rcon; }
     }
