@@ -1016,6 +1016,12 @@ public class ServerGuardConfig {
         private boolean nbtExploitPrevention = true;
         private boolean handshakeValidator = true;
 
+        // === V6.0 开源反作弊融合模块（检测维度借鉴 NCP / Grim / Kauri） ===
+        private boolean antiNoSwing = true;
+        private boolean antiAim = true;
+        private boolean antiFastLadder = true;
+        private boolean antiBadPackets = true;
+
         public boolean isJwtAuth() { return jwtAuth; }
         public void setJwtAuth(boolean jwtAuth) { this.jwtAuth = jwtAuth; }
         public boolean isBruteForce() { return bruteForce; }
@@ -1246,6 +1252,16 @@ public class ServerGuardConfig {
         public void setNbtExploitPrevention(boolean nbtExploitPrevention) { this.nbtExploitPrevention = nbtExploitPrevention; }
         public boolean isHandshakeValidator() { return handshakeValidator; }
         public void setHandshakeValidator(boolean handshakeValidator) { this.handshakeValidator = handshakeValidator; }
+
+        // === V6.0 开源反作弊融合模块 getters/setters ===
+        public boolean isAntiNoSwing() { return antiNoSwing; }
+        public void setAntiNoSwing(boolean antiNoSwing) { this.antiNoSwing = antiNoSwing; }
+        public boolean isAntiAim() { return antiAim; }
+        public void setAntiAim(boolean antiAim) { this.antiAim = antiAim; }
+        public boolean isAntiFastLadder() { return antiFastLadder; }
+        public void setAntiFastLadder(boolean antiFastLadder) { this.antiFastLadder = antiFastLadder; }
+        public boolean isAntiBadPackets() { return antiBadPackets; }
+        public void setAntiBadPackets(boolean antiBadPackets) { this.antiBadPackets = antiBadPackets; }
     }
 
     public static class AnnouncementConfig {
