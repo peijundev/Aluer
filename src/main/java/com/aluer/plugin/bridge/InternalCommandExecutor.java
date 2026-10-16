@@ -1,5 +1,6 @@
 package com.aluer.plugin.bridge;
 
+import com.aluer.platform.BukkitCompat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class InternalCommandExecutor {
             logger.warn("Cannot kick {}: player not online", playerName);
             return false;
         }
-        player.kick(net.kyori.adventure.text.Component.text(reason));
+        BukkitCompat.kick(player, reason);
         logger.info("Player {} kicked: {}", playerName, reason);
         return true;
     }
@@ -92,7 +93,7 @@ public class InternalCommandExecutor {
                     ? player.getAddress().getAddress().getHostAddress()
                     : "";
                 if (ip.equals(playerIP)) {
-                    player.kick(net.kyori.adventure.text.Component.text(reason));
+                    BukkitCompat.kick(player, reason);
                 }
             }
             logger.info("IP {} banned: {}", ip, reason);
@@ -141,8 +142,7 @@ public class InternalCommandExecutor {
 
     /** 广播消息给全服玩家 */
     public void broadcast(String message) {
-        Bukkit.getServer().broadcast(
-            net.kyori.adventure.text.Component.text(message));
+        BukkitCompat.broadcast(message);
     }
 
     /** 清理掉落物 */

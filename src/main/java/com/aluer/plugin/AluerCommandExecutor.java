@@ -2,6 +2,7 @@ package com.aluer.plugin;
 
 import com.aluer.plugin.bridge.AgentWebSocketClient;
 import com.aluer.plugin.bridge.InternalCommandExecutor;
+import com.aluer.platform.BukkitCompat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -71,7 +72,7 @@ public class AluerCommandExecutor implements CommandExecutor, TabCompleter {
             String ip = p.getAddress() != null && p.getAddress().getAddress() != null
                 ? p.getAddress().getAddress().getHostAddress() : "?";
             sender.sendMessage(P + "  " + ChatColor.WHITE + p.getName() +
-                ChatColor.GRAY + " | IP: " + ip + " | Ping: " + p.getPing() + "ms");
+                ChatColor.GRAY + " | IP: " + ip + " | Ping: " + BukkitCompat.getPing(p) + "ms");
         }
         return true;
     }
@@ -103,7 +104,7 @@ public class AluerCommandExecutor implements CommandExecutor, TabCompleter {
         sender.sendMessage(P + ChatColor.YELLOW + "═══ 扫描: " + target.getName() + " ═══");
         sender.sendMessage(P + "位置: " + String.format("(%.1f, %.1f, %.1f)", target.getLocation().getX(), target.getLocation().getY(), target.getLocation().getZ()));
         sender.sendMessage(P + "IP: " + (target.getAddress() != null ? target.getAddress().getAddress().getHostAddress() : "?"));
-        sender.sendMessage(P + "Ping: " + target.getPing() + "ms | OP: " + target.isOp());
+        sender.sendMessage(P + "Ping: " + BukkitCompat.getPing(target) + "ms | OP: " + target.isOp());
         sender.sendMessage(P + "飞行: " + target.isFlying() + " | 滑翔: " + target.isGliding());
         return true;
     }

@@ -3,6 +3,9 @@ package com.aluer.plugin;
 import com.aluer.plugin.bridge.AgentWebSocketClient;
 import com.aluer.plugin.bridge.InternalCommandExecutor;
 import com.aluer.plugin.listener.*;
+import com.aluer.platform.PlatformDetector;
+import com.aluer.platform.PlatformType;
+import com.aluer.platform.ServerPlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +40,9 @@ public class AluerPlugin extends JavaPlugin {
     /** Bukkit API 命令执行器 */
     private InternalCommandExecutor commandExecutor;
 
+    /** 运行时探测到的服务端平台（类型 + Minecraft 版本） */
+    private ServerPlatform platform;
+
     /** 服务端 URL（可通过 config.yml 覆盖） */
     private String serverUrl = "ws://localhost:8080/agent";
 
@@ -54,6 +60,9 @@ public class AluerPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         long startMs = System.currentTimeMillis();
+
+        // 探测运行平台与版本（跨 Spigot/Paper/Purpur/Folia 及 1.12.2+ 全版本）
+        platform = PlatformDetector.detect();
 
         // 读取配置
         saveDefaultConfig();
@@ -74,6 +83,8 @@ public class AluerPlugin extends JavaPlugin {
 
         long elapsed = System.currentTimeMillis() - startMs;
         logger.info("Agent enabled in {}ms", elapsed);
+        logger.info("  Platform: {} ({})", platform.platformName(), platform.rawVersion());
+        logger.info("  Minecraft: {} (supported={})", platform.minecraftVersion(), platform.isSupported());
         logger.info("  Server: {}", serverUrl);
         logger.info("  Listeners: 9 event handlers registered");
         logger.info("  Commands: /aluer /aluerstatus /aluerplayers /aluerblock /aluerscan /aluerwhitelist");
@@ -105,7 +116,8 @@ public class AluerPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EntityEventListener(this, wsClient), this);
         Bukkit.getPluginManager().registerEvents(new WorldEventListener(this, wsClient), this);
 
-        if (Bukkit.getServer().getClass().getPackageName().contains("paper")) {
+        // 包级事件监听器依赖 Paper 专有网络包 API，仅在 Paper 系平台注册
+        if (platform != null && isPaperFamily(platform.type())) {
             Bukkit.getPluginManager().registerEvents(new PacketEventListener(this, wsClient), this);
         }
     }
@@ -147,7 +159,17 @@ public class AluerPlugin extends JavaPlugin {
         return commandExecutor;
     }
 
+    /** 获取运行时探测到的服务端平台信息 */
+    public ServerPlatform getPlatform() {
+        return platform;
+    }
+
     public boolean isServerConnected() {
         return wsClient != null && wsClient.isConnected();
+    }
+
+    /** 判断平台类型是否属于 Paper 系（Paper/Purpur/Folia），具备网络包 API */
+    private static boolean isPaperFamily(PlatformType type) {
+        return type == PlatformType.PAPER || type == PlatformType.PURPUR || type == PlatformType.FOLIA;
     }
 }

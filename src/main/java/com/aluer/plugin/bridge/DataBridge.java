@@ -3,7 +3,7 @@ package com.aluer.plugin.bridge;
 import com.aluer.model.AlertEvent;
 import com.aluer.model.AlertType;
 import com.aluer.model.MetricsData;
-import org.bukkit.Bukkit;
+import com.aluer.platform.BukkitCompat;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +109,7 @@ public class DataBridge {
     public double getCurrentTps() {
         try {
             // Paper API: Bukkit.getServer().getTPS() 返回 double[3]（1m, 5m, 15m）
-            double[] tpsValues = Bukkit.getServer().getTPS();
+            double[] tpsValues = BukkitCompat.getTps();
             return tpsValues.length > 0 ? tpsValues[0] : 20.0;
         } catch (Exception e) {
             return 20.0; // 非 Paper 服务端回退
@@ -119,7 +119,7 @@ public class DataBridge {
     /** 获取 TPS 数组 [1m, 5m, 15m] */
     public double[] getTpsArray() {
         try {
-            return Bukkit.getServer().getTPS();
+            return BukkitCompat.getTps();
         } catch (Exception e) {
             return new double[]{20.0, 20.0, 20.0};
         }
@@ -290,7 +290,7 @@ public class DataBridge {
             this.z = loc.getZ();
             this.yaw = loc.getYaw();
             this.pitch = loc.getPitch();
-            this.ping = player.getPing();
+            this.ping = BukkitCompat.getPing(player);
             this.isOp = player.isOp();
             this.isFlying = player.isFlying();
             this.isSprinting = player.isSprinting();

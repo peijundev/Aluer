@@ -1,6 +1,7 @@
 package com.aluer.plugin.bridge;
 
 import com.aluer.agent.AgentMessage;
+import com.aluer.platform.BukkitCompat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
@@ -228,19 +229,11 @@ public class AgentWebSocketClient {
     }
 
     private String getServerVersion() {
-        try {
-            return org.bukkit.Bukkit.getServer().getVersion();
-        } catch (Exception e) {
-            return "unknown";
-        }
+        return BukkitCompat.getServerVersion();
     }
 
     private int getOnlinePlayerCount() {
-        try {
-            return org.bukkit.Bukkit.getServer().getOnlinePlayers().size();
-        } catch (Exception e) {
-            return 0;
-        }
+        return BukkitCompat.getOnlinePlayerCount();
     }
 
     // ─── WebSocket 监听器 ──────────────────────────────
