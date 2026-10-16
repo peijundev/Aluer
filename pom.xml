@@ -139,6 +139,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JetBrains annotations (used by Grim engine code, compile-time only) -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- PaperMC API for plugin mode (provided by Paper server at runtime) -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
