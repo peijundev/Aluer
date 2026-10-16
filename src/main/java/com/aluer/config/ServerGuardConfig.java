@@ -1023,6 +1023,9 @@ public class ServerGuardConfig {
         private boolean antiBadPackets = true;
         private boolean antiGodMode = true;
         private boolean antiFastHeal = true;
+        private boolean antiNoWeb = true;
+        /** 进程安全扫描（检测挖矿/反弹 shell/可疑路径等异常进程） */
+        private boolean processSecurity = true;
 
         public boolean isJwtAuth() { return jwtAuth; }
         public void setJwtAuth(boolean jwtAuth) { this.jwtAuth = jwtAuth; }
@@ -1268,6 +1271,10 @@ public class ServerGuardConfig {
         public void setAntiGodMode(boolean antiGodMode) { this.antiGodMode = antiGodMode; }
         public boolean isAntiFastHeal() { return antiFastHeal; }
         public void setAntiFastHeal(boolean antiFastHeal) { this.antiFastHeal = antiFastHeal; }
+        public boolean isAntiNoWeb() { return antiNoWeb; }
+        public void setAntiNoWeb(boolean antiNoWeb) { this.antiNoWeb = antiNoWeb; }
+        public boolean isProcessSecurity() { return processSecurity; }
+        public void setProcessSecurity(boolean processSecurity) { this.processSecurity = processSecurity; }
     }
 
     public static class AnnouncementConfig {
