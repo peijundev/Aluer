@@ -1024,6 +1024,7 @@ public class ServerGuardConfig {
         private boolean antiGodMode = true;
         private boolean antiFastHeal = true;
         private boolean antiNoWeb = true;
+        private boolean antiGroundSpoof = true;
         /** 进程安全扫描（检测挖矿/反弹 shell/可疑路径等异常进程） */
         private boolean processSecurity = true;
         /** 文件安全扫描（检测 webshell/后门脚本/可疑文件） */
@@ -1275,6 +1276,8 @@ public class ServerGuardConfig {
         public void setAntiFastHeal(boolean antiFastHeal) { this.antiFastHeal = antiFastHeal; }
         public boolean isAntiNoWeb() { return antiNoWeb; }
         public void setAntiNoWeb(boolean antiNoWeb) { this.antiNoWeb = antiNoWeb; }
+        public boolean isAntiGroundSpoof() { return antiGroundSpoof; }
+        public void setAntiGroundSpoof(boolean antiGroundSpoof) { this.antiGroundSpoof = antiGroundSpoof; }
         public boolean isProcessSecurity() { return processSecurity; }
         public void setProcessSecurity(boolean processSecurity) { this.processSecurity = processSecurity; }
         public boolean isFileSecurity() { return fileSecurity; }
