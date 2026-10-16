@@ -3,7 +3,6 @@ package com.aluer.anticheat.combat;
 import com.aluer.config.ServerGuardConfig;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +12,16 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 无挥臂（NoSwing）检测服务 — V6.0 开源反作弊融合模块
  *
- * <p>检测思路参考开源反作弊 <b>NoCheatPlus 的 NoSwing 检查</b>：在 Minecraft 中，
- * 玩家攻击实体、破坏方块、放置方块都必须先挥动手臂（swing arm）。NoSwing 类作弊
- * 会跳过挥臂动画，直接发送攻击/破坏/放置数据包，从而绕过基于动画的检测。</p>
+ * <p>检测算法<b>移植自 NoCheatPlus 的 fight/NoSwing</b>（本项目已采用 GPL-3.0，
+ * 与 NCP 许可证兼容）。NCP 原始逻辑：</p>
+ * <ul>
+ *   <li>玩家挥臂时置位 {@code noSwingArmSwung} 标志。</li>
+ *   <li>攻击/破坏时检查该标志：若已挥臂则衰减违规等级（VL × 0.9）并清除标志；
+ *       若未挥臂则 VL 累加 1。</li>
+ *   <li>VL 达到阈值即判定为 NoSwing 作弊。</li>
+ * </ul>
  *
- * <p>检测原理：追踪每个玩家最近一次挥臂时间，当发生攻击/破块/放块动作时，
- * 校验该动作与最近挥臂的时间间隔。若间隔超出正常窗口（说明「有动作但没挥臂」），
- * 累计违规；连续多次无挥臂动作即判定为作弊。</p>
+ * <p>本服务将其翻译为「接收 Agent 结构化数据」的等价状态机，保留 VL 累积 + 衰减机制。</p>
  *
  * <p>配置开关：serverguard.security.super-evolution.anti-no-swing</p>
  */
@@ -28,20 +30,20 @@ public class AntiNoSwingService {
 
     private final ServerGuardConfig config;
 
-    /** 每个玩家最近一次挥臂时间（playerName → 时间戳） */
-    private final Map<String, Instant> lastSwingTimes = new ConcurrentHashMap<>();
+    /** 每个玩家的挥臂标志（true = 已挥臂待消费） */
+    private final Map<String, Boolean> armSwung = new ConcurrentHashMap<>();
 
-    /** 每个玩家的连续无挥臂违规次数（playerName → 次数） */
-    private final Map<String, Integer> violations = new ConcurrentHashMap<>();
+    /** 每个玩家的违规等级 VL（累积 + 衰减） */
+    private final Map<String, Double> violationLevel = new ConcurrentHashMap<>();
 
     private final AtomicLong totalChecks = new AtomicLong(0);
     private final AtomicLong flaggedCount = new AtomicLong(0);
 
-    /** 挥臂到动作的最大允许间隔（毫秒）—— 超过视为「无挥臂动作」 */
-    private static final long SWING_WINDOW_MS = 150;
+    /** VL 达到此阈值判定为作弊 */
+    private static final double VL_THRESHOLD = 4.0;
 
-    /** 连续无挥臂动作次数阈值 —— 达到即标记 */
-    private static final int VIOLATION_THRESHOLD = 3;
+    /** 挥臂后攻击的 VL 衰减系数（对齐 NCP） */
+    private static final double VL_DECAY = 0.9;
 
     /** 无参构造（测试兼容） */
     public AntiNoSwingService() {
@@ -52,69 +54,63 @@ public class AntiNoSwingService {
         this.config = config;
     }
 
-    /**
-     * 记录一次玩家挥臂动作（监听 SwingEvent 时调用）。
-     *
-     * @param playerName 玩家名称
-     * @param timestamp  挥臂时间戳
-     */
-    public void recordSwing(String playerName, Instant timestamp) {
+    /** 记录一次挥臂动作（监听 SwingEvent 时调用） */
+    public void recordSwing(String playerName) {
         if (!config.getSecurity().getSuperEvolution().isAntiNoSwing()) {
             return;
         }
-        lastSwingTimes.put(playerName, timestamp);
+        armSwung.put(playerName, true);
     }
 
     /** 检测攻击实体时是否挥臂 */
-    public NoSwingCheckResult checkAttack(String playerName, String targetName, Instant timestamp) {
-        return checkAction(playerName, "attack", targetName, timestamp);
+    public NoSwingCheckResult checkAttack(String playerName, String targetName) {
+        return checkAction(playerName, "attack", targetName);
     }
 
     /** 检测破坏方块时是否挥臂 */
-    public NoSwingCheckResult checkBlockBreak(String playerName, String material, Instant timestamp) {
-        return checkAction(playerName, "block-break", material, timestamp);
+    public NoSwingCheckResult checkBlockBreak(String playerName, String material) {
+        return checkAction(playerName, "block-break", material);
     }
 
     /** 检测放置方块时是否挥臂 */
-    public NoSwingCheckResult checkBlockPlace(String playerName, String material, Instant timestamp) {
-        return checkAction(playerName, "block-place", material, timestamp);
+    public NoSwingCheckResult checkBlockPlace(String playerName, String material) {
+        return checkAction(playerName, "block-place", material);
     }
 
     /**
-     * 统一动作校验：动作发生时，最近挥臂是否在允许窗口内。
+     * 统一动作校验（对齐 NCP 的「挥臂标志 + VL 累积/衰减」逻辑）。
      */
-    private NoSwingCheckResult checkAction(String playerName, String action, String detail, Instant timestamp) {
+    private NoSwingCheckResult checkAction(String playerName, String action, String detail) {
         if (!config.getSecurity().getSuperEvolution().isAntiNoSwing()) {
             return NoSwingCheckResult.clean();
         }
         totalChecks.incrementAndGet();
 
-        Instant lastSwing = lastSwingTimes.get(playerName);
-        if (lastSwing == null) {
-            // 尚无挥臂记录（可能是记录开始前的首次动作），无法判定，不标记
+        // 消费挥臂标志（null 表示从未挥臂）
+        boolean swung = Boolean.TRUE.equals(armSwung.remove(playerName));
+        double vl = violationLevel.getOrDefault(playerName, 0.0);
+
+        if (swung) {
+            // 挥臂后动作，正常，衰减违规等级
+            violationLevel.put(playerName, vl * VL_DECAY);
             return NoSwingCheckResult.clean();
         }
 
-        long gap = timestamp.toEpochMilli() - lastSwing.toEpochMilli();
-        if (gap <= SWING_WINDOW_MS) {
-            // 动作伴随挥臂，正常
-            return NoSwingCheckResult.clean();
-        }
-
-        // 有动作但窗口内无挥臂 —— 累计违规
-        int v = violations.merge(playerName, 1, Integer::sum);
-        String reason = "NO_SWING: " + action + " " + detail + " 距上次挥臂 " + gap + "ms";
-        if (v >= VIOLATION_THRESHOLD) {
+        // 未挥臂动作，违规等级累加
+        vl += 1.0;
+        violationLevel.put(playerName, vl);
+        String reason = "NO_SWING: " + action + " " + detail + "（VL=" + String.format("%.1f", vl) + "）";
+        if (vl >= VL_THRESHOLD) {
             flaggedCount.incrementAndGet();
-            return NoSwingCheckResult.flagged(List.of(reason, "连续 " + v + " 次无挥臂动作"));
+            return NoSwingCheckResult.flagged(List.of(reason, "无挥臂动作累积"));
         }
         return NoSwingCheckResult.suspicious(List.of(reason));
     }
 
     /** 玩家离线时清理追踪数据 */
     public void clearPlayer(String playerName) {
-        lastSwingTimes.remove(playerName);
-        violations.remove(playerName);
+        armSwung.remove(playerName);
+        violationLevel.remove(playerName);
     }
 
     /** 获取模块运行状态 */
@@ -123,7 +119,7 @@ public class AntiNoSwingService {
         s.put("enabled", config.getSecurity().getSuperEvolution().isAntiNoSwing());
         s.put("totalChecks", totalChecks.get());
         s.put("flaggedCount", flaggedCount.get());
-        s.put("trackedPlayers", lastSwingTimes.size());
+        s.put("trackedPlayers", violationLevel.size());
         return s;
     }
 

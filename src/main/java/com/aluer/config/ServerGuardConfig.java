@@ -1016,11 +1016,13 @@ public class ServerGuardConfig {
         private boolean nbtExploitPrevention = true;
         private boolean handshakeValidator = true;
 
-        // === V6.0 开源反作弊融合模块（检测维度借鉴 NCP / Grim / Kauri） ===
+        // === V6.0 开源反作弊融合模块（检测算法合并自 NCP / Grim / Kauri） ===
         private boolean antiNoSwing = true;
         private boolean antiAim = true;
         private boolean antiFastLadder = true;
         private boolean antiBadPackets = true;
+        private boolean antiGodMode = true;
+        private boolean antiFastHeal = true;
 
         public boolean isJwtAuth() { return jwtAuth; }
         public void setJwtAuth(boolean jwtAuth) { this.jwtAuth = jwtAuth; }
@@ -1262,6 +1264,10 @@ public class ServerGuardConfig {
         public void setAntiFastLadder(boolean antiFastLadder) { this.antiFastLadder = antiFastLadder; }
         public boolean isAntiBadPackets() { return antiBadPackets; }
         public void setAntiBadPackets(boolean antiBadPackets) { this.antiBadPackets = antiBadPackets; }
+        public boolean isAntiGodMode() { return antiGodMode; }
+        public void setAntiGodMode(boolean antiGodMode) { this.antiGodMode = antiGodMode; }
+        public boolean isAntiFastHeal() { return antiFastHeal; }
+        public void setAntiFastHeal(boolean antiFastHeal) { this.antiFastHeal = antiFastHeal; }
     }
 
     public static class AnnouncementConfig {
