@@ -22,6 +22,7 @@ public class ServerGuardConfig {
     private DashboardConfig dashboard = new DashboardConfig();
     private AnnouncementConfig announcement = new AnnouncementConfig();
     private AfkConfig afk = new AfkConfig();
+    private PluginConfig plugin = new PluginConfig();
 
     /** 运行模式：plugin（Paper 插件内部）或 external（传统外部监控），默认 external */
     private String mode = "external";
@@ -241,6 +242,8 @@ public class ServerGuardConfig {
     public void setAnnouncement(AnnouncementConfig announcement) { this.announcement = announcement; }
     public AfkConfig getAfk() { return afk; }
     public void setAfk(AfkConfig afk) { this.afk = afk; }
+    public PluginConfig getPlugin() { return plugin; }
+    public void setPlugin(PluginConfig plugin) { this.plugin = plugin; }
 
     public static class BackupConfig {
         private boolean enabled = false;
@@ -1268,5 +1271,18 @@ public class ServerGuardConfig {
         public void setAfkZone(String afkZone) { this.afkZone = afkZone; }
         public boolean isAutoLogout() { return autoLogout; }
         public void setAutoLogout(boolean autoLogout) { this.autoLogout = autoLogout; }
+    }
+
+    /** 插件系统配置 */
+    public static class PluginConfig {
+        /** 是否启用插件系统（启动时扫描插件目录） */
+        private boolean enabled = true;
+        /** 插件目录（存放第三方插件 JAR） */
+        private String directory = "serverguard/plugins";
+
+        public boolean isEnabled() { return enabled; }
+        public void setEnabled(boolean enabled) { this.enabled = enabled; }
+        public String getDirectory() { return directory; }
+        public void setDirectory(String directory) { this.directory = directory; }
     }
 }

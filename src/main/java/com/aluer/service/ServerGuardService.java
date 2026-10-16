@@ -333,4 +333,14 @@ public class ServerGuardService implements CommandLineRunner {
 
     public boolean isRunning() { return running.get(); }
     public void stop() { running.set(false); }
+
+    /**
+     * 对外统一告警发布入口。
+     *
+     * <p>供插件系统等外部模块复用统一的告警处理管道（AI 分析、邮件通知、自动处置），
+     * 避免各模块各自实现一套告警逻辑。</p>
+     */
+    public void publishAlert(AlertEvent alert) {
+        handleAlert(alert);
+    }
 }

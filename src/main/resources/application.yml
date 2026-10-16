@@ -3,6 +3,11 @@ serverguard:
   # Paper 插件模式由系统属性 serverguard.mode=plugin 自动设置
   mode: ${SERVERGUARD_MODE:external}
 
+  # 插件系统：第三方扩展模块加载
+  plugin:
+    enabled: true
+    directory: ${SERVERGUARD_PLUGIN_DIR:serverguard/plugins}
+
   minecraft:
     service-name: minecraft
     process-name: paper-1.21.11
