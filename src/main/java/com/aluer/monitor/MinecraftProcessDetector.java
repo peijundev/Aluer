@@ -2,6 +2,9 @@ package com.aluer.monitor;
 
 import com.aluer.config.ServerGuardConfig;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -24,6 +27,12 @@ import java.util.regex.Pattern;
  * <p>本类通过「JAR 名归一化 + {@code -jar} 参数提取」解决上述 build 号问题，
  * 并返回结构化的 {@link ProcessInfo}（PID / 命令行 / JAR 名 / 启动时间 / CPU 时长 / 用户），
  * 供监控、告警与运维展示使用。</p>
+ *
+ * <p>此外，当命令行核心名无法识别时（例如自定义启动器或重命名的 JAR，
+ * 如 {@code java -jar ModLoad.jar} 启动的 Youer 服务端），本类会进一步读取进程
+ * 工作目录（Linux {@code /proc/<pid>/cwd}），检查是否存在 Minecraft 服务器特征文件
+ * （{@code server.properties}/{@code eula.txt}/{@code logs/latest.log} 等）作为兜底判定，
+ * 确保不依赖启动器命名即可完成「自动发现」。</p>
  */
 public final class MinecraftProcessDetector {
 
@@ -41,7 +50,19 @@ public final class MinecraftProcessDetector {
     private static final List<String> KNOWN_SERVER_CORE_MARKERS = List.of(
             "paper", "spigot", "purpur", "pufferfish", "folia",
             "craftbukkit", "glowstone", "mohist", "arclight",
-            "forge", "neoforge", "fabric", "sponge");
+            "forge", "neoforge", "fabric", "sponge",
+            "youer");
+
+    /**
+     * 出现在进程工作目录即高度指向 Minecraft 服务器的特征文件。
+     *
+     * <p>作为命令行核心名识别失败时的兜底证据，覆盖自定义启动器（如 {@code ModLoad.jar}）、
+     * 重命名 JAR 等无法从命令行文本判断核心名的场景。命中任一文件即判定为服务器进程。</p>
+     */
+    private static final List<String> MINECRAFT_SERVER_MARKER_FILES = List.of(
+            "server.properties", "eula.txt", "bukkit.yml", "spigot.yml",
+            "paper.yml", "purpur.yml", "pufferfish.yml", "fabricloader.log",
+            "logs/latest.log");
 
     private MinecraftProcessDetector() {
         // 纯静态工具类，禁止实例化
@@ -130,7 +151,19 @@ public final class MinecraftProcessDetector {
             return false;
         }
         String commandLine = ph.info().commandLine().orElse("");
-        return commandLineMatches(commandLine, processName, jarFile);
+        if (commandLineMatches(commandLine, processName, jarFile)) {
+            return true;
+        }
+        // 命令行匹配失败时，用进程工作目录下的 Minecraft 特征文件兜底识别。
+        // 覆盖自定义启动器/重命名 JAR（如 java -jar ModLoad.jar 启动的 Youer 服务端）
+        // 等核心名无法从命令行文本判断的情况。
+        // 前置条件：命令行须含 .jar（jar 启动的 Java 进程），避免把恰好工作目录相同的
+        // 终端 / Shell（konsole、zsh 等）误判为服务器进程。
+        if (!commandLine.toLowerCase().contains(".jar")) {
+            return false;
+        }
+        String cwd = resolveWorkingDirectory(ph);
+        return cwd != null && hasMinecraftServerFiles(Path.of(cwd));
     }
 
     /**
@@ -261,6 +294,55 @@ public final class MinecraftProcessDetector {
         return false;
     }
 
+    // ─── 工作目录特征兜底 ──────────────────────────────
+
+    /**
+     * 解析进程的工作目录（Linux 专属）。
+     *
+     * <p>JDK 的 {@link ProcessHandle.Info} 不提供工作目录字段，故读取 {@code /proc/<pid>/cwd}
+     * 符号链接指向的真实路径。权限不足或进程已退出时返回 null，由调用方按「无法判定」处理。</p>
+     *
+     * @param ph 目标进程句柄
+     * @return 工作目录绝对路径，无法解析返回 null
+     */
+    static String resolveWorkingDirectory(ProcessHandle ph) {
+        if (ph == null) {
+            return null;
+        }
+        Path cwdLink = Path.of("/proc", String.valueOf(ph.pid()), "cwd");
+        try {
+            if (Files.exists(cwdLink)) {
+                return cwdLink.toRealPath().toString();
+            }
+        } catch (IOException | RuntimeException e) {
+            // 无权限（其他用户进程）或进程恰好退出：按无法解析处理，不向上抛异常
+        }
+        return null;
+    }
+
+    /**
+     * 判断目录下是否存在 Minecraft 服务器特征文件（纯逻辑，便于测试）。
+     *
+     * <p>命中任一特征文件（{@code server.properties}/{@code eula.txt}/
+     * {@code logs/latest.log}/{@code fabricloader.log} 等）即返回 true。
+     * 这些文件是所有 Minecraft 服务端（含自定义启动器、重命名 JAR、混合端）的通用产物，
+     * 与核心名无关，因此是「自动发现」最可靠的一层兜底。</p>
+     *
+     * @param dir 待检测目录
+     * @return true 表示该目录下存在服务器特征文件
+     */
+    static boolean hasMinecraftServerFiles(Path dir) {
+        if (dir == null) {
+            return false;
+        }
+        for (String marker : MINECRAFT_SERVER_MARKER_FILES) {
+            if (Files.isRegularFile(dir.resolve(marker))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // ─── 结果类 ────────────────────────────────────────
 
     /**
@@ -272,16 +354,18 @@ public final class MinecraftProcessDetector {
         private final long pid;
         private final String commandLine;
         private final String jarName;
+        private final String workingDirectory;
         private final boolean alive;
         private final Instant startTime;
         private final Duration cpuDuration;
         private final String user;
 
-        ProcessInfo(long pid, String commandLine, String jarName, boolean alive,
-                    Instant startTime, Duration cpuDuration, String user) {
+        ProcessInfo(long pid, String commandLine, String jarName, String workingDirectory,
+                    boolean alive, Instant startTime, Duration cpuDuration, String user) {
             this.pid = pid;
             this.commandLine = commandLine;
             this.jarName = jarName;
+            this.workingDirectory = workingDirectory;
             this.alive = alive;
             this.startTime = startTime;
             this.cpuDuration = cpuDuration;
@@ -296,6 +380,7 @@ public final class MinecraftProcessDetector {
                     handle.pid(),
                     commandLine,
                     extractJarName(commandLine),
+                    resolveWorkingDirectory(handle),
                     handle.isAlive(),
                     info.startInstant().orElse(null),
                     info.totalCpuDuration().orElse(null),
@@ -305,6 +390,7 @@ public final class MinecraftProcessDetector {
         public long getPid() { return pid; }
         public String getCommandLine() { return commandLine; }
         public String getJarName() { return jarName; }
+        public String getWorkingDirectory() { return workingDirectory; }
         public boolean isAlive() { return alive; }
         public Instant getStartTime() { return startTime; }
         public Duration getCpuDuration() { return cpuDuration; }
@@ -312,8 +398,8 @@ public final class MinecraftProcessDetector {
 
         @Override
         public String toString() {
-            return String.format("ProcessInfo{pid=%d, jar=%s, alive=%s, user=%s}",
-                    pid, jarName, alive, user);
+            return String.format("ProcessInfo{pid=%d, jar=%s, cwd=%s, alive=%s, user=%s}",
+                    pid, jarName, workingDirectory, alive, user);
         }
     }
 }

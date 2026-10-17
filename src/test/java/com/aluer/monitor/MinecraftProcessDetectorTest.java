@@ -1,6 +1,12 @@
 package com.aluer.monitor;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -156,5 +162,43 @@ class MinecraftProcessDetectorTest {
         // 显式配置了关键词（velocity），即使命令行是 paper 服务器，也应精确匹配失败而不兜底通用识别
         assertFalse(MinecraftProcessDetector.commandLineMatches(
                 "java -jar paper-1.21.1.jar nogui", "velocity", "velocity-3.3.0.jar"));
+    }
+
+    // ─── 工作目录特征文件兜底（自动发现兜底层） ────────
+
+    @Test
+    void hasMinecraftServerFilesDetectsMarkerFile(@TempDir Path tempDir) throws Exception {
+        // 空目录不应识别
+        assertFalse(MinecraftProcessDetector.hasMinecraftServerFiles(tempDir));
+        // 出现 server.properties 即识别为 Minecraft 服务器
+        Files.writeString(tempDir.resolve("server.properties"), "server-port=25565\n");
+        assertTrue(MinecraftProcessDetector.hasMinecraftServerFiles(tempDir));
+    }
+
+    @Test
+    void hasMinecraftServerFilesDetectsNestedLatestLog(@TempDir Path tempDir) throws Exception {
+        Files.createDirectories(tempDir.resolve("logs"));
+        Files.writeString(tempDir.resolve("logs/latest.log"), "[Server thread/INFO]: Done");
+        assertTrue(MinecraftProcessDetector.hasMinecraftServerFiles(tempDir));
+    }
+
+    @Test
+    void hasMinecraftServerFilesDetectsFabricLoaderLog(@TempDir Path tempDir) throws Exception {
+        // 混合端（Fabric/NeoForge/Youer）常以 fabricloader.log 作为启动痕迹
+        Files.writeString(tempDir.resolve("fabricloader.log"), "Loading");
+        assertTrue(MinecraftProcessDetector.hasMinecraftServerFiles(tempDir));
+    }
+
+    @Test
+    void hasMinecraftServerFilesRejectsNull() {
+        assertFalse(MinecraftProcessDetector.hasMinecraftServerFiles(null));
+    }
+
+    @Test
+    @EnabledOnOs(OS.LINUX)
+    void resolveWorkingDirectoryReturnsPathForCurrentProcess() {
+        String cwd = MinecraftProcessDetector.resolveWorkingDirectory(ProcessHandle.current());
+        assertNotNull(cwd);
+        assertFalse(cwd.isBlank());
     }
 }
