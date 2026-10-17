@@ -5,3 +5,7 @@
 # 外部 ServerGuard 引擎的 WebSocket 地址。
 # 引擎与游戏服务器同机部署时保持默认即可；跨主机部署时改为 ws://<引擎IP>:8080/agent
 server-url: ws://localhost:8080/agent
+
+# 是否在服务器控制台打印「发送给引擎」的消息摘要（type + 事件/告警类型），默认开启。
+# 便于运维肉眼观察 Agent 与引擎的实时通信；设为 false 可关闭，减少高频事件刷屏。
+log-outbound: true

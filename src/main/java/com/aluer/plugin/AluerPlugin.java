@@ -75,11 +75,15 @@ public class AluerPlugin extends JavaPlugin {
         }
         serverUrl = getConfig().getString("server-url", "ws://localhost:8080/agent");
 
+        // 是否在服务器控制台打印「发送给引擎的消息」摘要（默认开启，便于观察）
+        boolean logOutbound = getConfig().getBoolean("log-outbound", true);
+
         // 初始化内部命令执行器
         commandExecutor = new InternalCommandExecutor();
 
         // 初始化 WebSocket 客户端
         wsClient = new AgentWebSocketClient(serverUrl, commandExecutor);
+        wsClient.setLogOutbound(logOutbound);
         wsClient.connect();
 
         // 注册 Bukkit 事件监听器（传入 WebSocket 客户端）

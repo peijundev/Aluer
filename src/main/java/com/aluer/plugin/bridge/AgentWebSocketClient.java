@@ -42,6 +42,9 @@ public class AgentWebSocketClient {
     private volatile boolean connected = false;
     private volatile boolean running = true;
 
+    /** 是否在服务器控制台打印「发送给引擎的消息」摘要，默认开启（便于运维观察） */
+    private volatile boolean logOutbound = true;
+
     /** 重连间隔（秒），指数退避上限 60 秒 */
     private int reconnectDelay = 5;
     private static final int MAX_RECONNECT_DELAY = 60;
@@ -70,6 +73,11 @@ public class AgentWebSocketClient {
 
     public void setCommandHandler(Consumer<String> handler) {
         this.commandHandler = handler;
+    }
+
+    /** 设置是否在服务器控制台打印发往引擎的消息摘要 */
+    public void setLogOutbound(boolean logOutbound) {
+        this.logOutbound = logOutbound;
     }
 
     // ─── 连接管理 ──────────────────────────────────────
@@ -175,6 +183,8 @@ public class AgentWebSocketClient {
         if (isConnected()) {
             try {
                 webSocket.sendText(message, true).get(5, TimeUnit.SECONDS);
+                // 发送成功后把消息摘要回显到服务器控制台，便于观察 Agent 给引擎发了什么
+                logOutbound(message);
             } catch (Exception e) {
                 logger.debug("WebSocket send failed, queueing message: {}", e.getMessage());
                 queuePending(message);
@@ -182,6 +192,37 @@ public class AgentWebSocketClient {
         } else {
             queuePending(message);
         }
+    }
+
+    /**
+     * 将「发送给引擎的消息」摘要打印到服务器控制台。
+     *
+     * <p>心跳每 15 秒一次，降为 debug 级别避免刷屏；其余消息按 info 级别打印
+     * 消息类型与关键字段（事件类型 / 告警类型）摘要，便于运维肉眼确认 Agent 与引擎
+     * 的实时通信是否正常。</p>
+     */
+    private void logOutbound(String message) {
+        if (!logOutbound) {
+            return;
+        }
+        String type = AgentMessage.getType(message);
+        if (type == null) {
+            return;
+        }
+        if (AgentMessage.TYPE_HEARTBEAT.equals(type)) {
+            logger.debug("[→Aluer引擎] HEARTBEAT");
+            return;
+        }
+        String summary = "";
+        JsonObject payload = AgentMessage.getPayload(message);
+        if (payload != null) {
+            if (AgentMessage.TYPE_EVENT.equals(type) && payload.has("eventType")) {
+                summary = " " + payload.get("eventType").getAsString();
+            } else if (AgentMessage.TYPE_ALERT.equals(type) && payload.has("alertType")) {
+                summary = " " + payload.get("alertType").getAsString();
+            }
+        }
+        logger.info("[→Aluer引擎] {}{}", type, summary);
     }
 
     private void queuePending(String message) {

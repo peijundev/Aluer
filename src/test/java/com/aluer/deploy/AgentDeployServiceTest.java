@@ -100,4 +100,27 @@ class AgentDeployServiceTest {
 
         assertFalse(result.isSuccess());
     }
+
+    @Test
+    void needsDeployReturnsFalseWhenWorkingDirNull() {
+        assertFalse(AgentDeployService.needsDeploy(null, "serverguard-agent.jar"));
+    }
+
+    @Test
+    void needsDeployReturnsFalseWhenJarNameBlank(@TempDir Path tempDir) {
+        assertFalse(AgentDeployService.needsDeploy(tempDir, ""));
+    }
+
+    @Test
+    void needsDeployReturnsTrueWhenAgentMissing(@TempDir Path tempDir) {
+        assertTrue(AgentDeployService.needsDeploy(tempDir, "serverguard-agent.jar"));
+    }
+
+    @Test
+    void needsDeployReturnsFalseWhenAgentExists(@TempDir Path tempDir) throws IOException {
+        Path plugins = tempDir.resolve("plugins");
+        Files.createDirectories(plugins);
+        Files.createFile(plugins.resolve("serverguard-agent.jar"));
+        assertFalse(AgentDeployService.needsDeploy(tempDir, "serverguard-agent.jar"));
+    }
 }
