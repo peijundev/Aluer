@@ -5,24 +5,26 @@
 <h1 align="center">Aluer ServerGuard V5.0</h1>
 
 <p align="center">
-  <b>AI 驱动的 Minecraft PaperMC 服务器全方位安全防护系统</b><br>
-  <sub>135+ 安全模块 · 全类型外挂对抗覆盖 · Agent 实时架构 · DeepSeek AI 决策</sub>
+  <b>AI 驱动的 Minecraft 多平台服务器全方位安全防护系统</b><br>
+  <sub>170+ 安全模块 · 全类型外挂对抗覆盖 · 多平台多版本支持 · Agent 实时架构 · DeepSeek AI 决策</sub>
 </p>
 
 <p align="center">
   <a href="https://github.com/ZpjDev/Aluer/releases/latest"><img src="https://img.shields.io/github/v/release/ZpjDev/Aluer?style=for-the-badge&color=6366f1" alt="Latest Release"></a>
   <a href="#"><img src="https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge" alt="Build Status"></a>
-  <a href="#"><img src="https://img.shields.io/badge/tests-323%2F323-green?style=for-the-badge" alt="Tests"></a>
+  <a href="#"><img src="https://img.shields.io/badge/tests-456%2F456-green?style=for-the-badge" alt="Tests"></a>
   <a href="#"><img src="https://img.shields.io/badge/Java-21-red?style=for-the-badge&logo=openjdk" alt="Java 21"></a>
-  <a href="#"><img src="https://img.shields.io/badge/PaperMC-1.21.1-blue?style=for-the-badge" alt="PaperMC 1.21.1"></a>
-  <a href="#"><img src="https://img.shields.io/badge/modules-135%2B-purple?style=for-the-badge" alt="135+ Modules"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-orange?style=for-the-badge" alt="Apache 2.0 License"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Minecraft-1.12.2%2B-blue?style=for-the-badge" alt="Minecraft 1.12.2+"></a>
+  <a href="#"><img src="https://img.shields.io/badge/modules-170%2B-purple?style=for-the-badge" alt="170+ Modules"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL%203.0-orange?style=for-the-badge" alt="GPL 3.0 License"></a>
 </p>
 
 <p align="center">
   <a href="#快速开始">快速开始</a> ·
   <a href="#系统架构">系统架构</a> ·
   <a href="#安全模块完整清单">安全模块</a> ·
+  <a href="#多平台多版本支持">多平台支持</a> ·
+  <a href="#插件系统">插件系统</a> ·
   <a href="#部署指南">部署指南</a> ·
   <a href="#配置参考">配置参考</a> ·
   <a href="#外挂对抗覆盖矩阵">外挂覆盖</a> ·
@@ -34,7 +36,9 @@
 
 ## 项目概述
 
-Aluer ServerGuard 是一款**专为 Minecraft PaperMC 服务器打造的新一代智能安全防护系统**。系统采用革命性的 **Agent 架构**——通过轻量级 Paper 插件作为数据采集前端植入服务器进程内部，配合外部 Spring Boot 分析引擎独立运行，通过 **WebSocket 实时双向通信**实现对服务器的全方位实时防护。
+Aluer ServerGuard 是一款**专为 Minecraft 服务器打造的新一代智能安全防护系统**。系统采用革命性的 **Agent 架构**——通过轻量级 Bukkit 插件作为数据采集前端植入服务器进程内部，配合外部 Spring Boot 分析引擎独立运行，通过 **WebSocket 实时双向通信**实现对服务器的全方位实时防护。
+
+通过平台抽象层（`com.aluer.platform`），同一个 Agent 插件可运行于 **Spigot / Paper / Purpur / Pufferfish / Folia** 等全部 Bukkit 系平台，覆盖 **Minecraft 1.12.2 至今**的全部版本。
 
 ### 为什么选择 Aluer ServerGuard？
 
@@ -42,22 +46,27 @@ Aluer ServerGuard 是一款**专为 Minecraft PaperMC 服务器打造的新一�
 |------|---------------|
 | 外挂客户端泛滥（KillAura/Speed/Fly/Xray 等） | 全类型外挂对抗覆盖，实时检测毫秒级响应 |
 | 传统反作弊依赖规则引擎，误报率高 | AI + ML 双层分析：DeepSeek 大模型语义理解 + 隔离森林/香农熵/FFT 统计检测 |
-| DDoS 攻击导致服务器瘫痪 | 7 层 DDoS 协同防御（SYN/UDP/ICMP/HTTP/Slowloris/MC协议/放大攻击） |
+| DDoS 攻击导致服务器瘫痪 | 多层 DDoS 协同防御（SYN/UDP/ICMP/HTTP/Slowloris/MC协议/放大攻击） |
 | 管理员不在线时服务器崩溃无人处理 | Kernel 自治引擎 + SelfHealing 自愈系统，自动检测→分析→执行→恢复 |
-| 多个安全工具管理复杂 | 单一 JAR 部署，Web 控制台统一管理 135+ 模块，游戏内 /aluer 命令 |
-| 插件模式侵入性高，影响服务器性能 | Agent 架构分离：插件仅 50MB 内存占用，分析引擎独立运行不影响 TPS |
+| 多个安全工具管理复杂 | 单一 JAR 部署，Web 控制台统一管理 170+ 模块，游戏内 /aluer 命令 |
+| 插件模式侵入性高，影响服务器性能 | Agent 架构分离：插件仅几十 MB 内存占用，分析引擎独立运行不影响 TPS |
+| 服务器核心/版本各异，难以统一防护 | 平台抽象层 + 反射兼容，一套 Agent 适配 Spigot→Folia、1.12.2→1.21.x |
 
 ### 核心能力一览
 
 | 能力 | 说明 |
 |------|------|
-| **全类型反作弊** | 全类型外挂对抗覆盖（Combat / Movement / World / Player / Misc 五大类 55+ 个 hack 模块） |
+| **全类型反作弊** | 64 个反作弊模块（战斗 20 / 移动 21 / 世界 14 / 玩家 9），融合 Grim / NoCheatPlus 开源算法 |
 | **AI 决策引擎** | DeepSeek 大模型自动分析安全告警 → 生成防御策略 → 自动执行（ban IP / kick player / enable whitelist / clear lag） |
 | **ML 行为分析** | 隔离森林（Isolation Forest）异常检测 + 时间序列预测 + 香农熵（Shannon Entropy）玩家行为画像 + FFT 频谱移动分析 |
+| **多平台多版本** | 平台抽象层 + 反射兼容层，Spigot/Paper/Purpur/Folia，Minecraft 1.12.2+ |
+| **插件系统** | 第三方独立 JAR 扩展引擎能力，无需修改引擎源码 |
+| **Agent 自动注入** | 引擎启动时自动将 Agent 插件打包并部署到服务端 plugins/ 目录 |
 | **DDoS 多层防御** | SYN Flood / UDP Flood / ICMP Flood / HTTP Flood / Slowloris / Minecraft Status/Login/Rcon/Query 协同防御 |
+| **主机安全扫描** | 挖矿木马 / 反弹 Shell / webshell / 后门脚本 / 进程注入检测 |
 | **服务器自愈** | TPS < 12 或 CPU > 92% 或 Memory > 95% 自动触发恢复流程（备份 → 清理实体 → 限制连接 → 白名单 → 软重启） |
 | **双模式部署** | Agent Plugin 模式（推荐，< 1ms 延迟，50K+/s 吞吐）+ External RCON 模式（零侵入） |
-| **135+ 安全模块** | 反作弊 / 网络安全 / 协议验证 / 主机安全 / 入侵检测 / 取证分析 / 合规审计 / 运维自动化 |
+| **170+ 安全模块** | 反作弊 / 网络安全 / 协议验证 / 主机安全 / 入侵检测 / 取证分析 / 合规审计 / 运维自动化 |
 
 ---
 
@@ -82,19 +91,22 @@ open http://localhost:8080
 # 步骤 1：启动 ServerGuard 引擎
 java -jar serverguard.jar
 
-# 步骤 2：将同一 JAR 复制到 Paper 服务器 plugins/ 目录
+# 引擎启动时自动注入 Agent 插件到服务端 plugins/ 目录（serverguard.mode=plugin 时）
+# 手动部署也可：将 JAR 复制到 Paper 服务器 plugins/ 目录
 cp serverguard.jar /opt/minecraft/plugins/AluerServerGuard.jar
 
-# 步骤 3：创建 Agent 配置（指定 ServerGuard 地址）
+# 步骤 2：创建 Agent 配置（指定 ServerGuard 地址）
 mkdir -p /opt/minecraft/plugins/AluerServerGuard
 cat > /opt/minecraft/plugins/AluerServerGuard/config.yml << EOF
 server-url: ws://localhost:8080/agent
 EOF
 
-# 步骤 4：启动 Paper 服务器——Agent 自动连接并开始推送数据
+# 步骤 3：启动 Paper 服务器——Agent 自动连接并开始推送数据
 cd /opt/minecraft
-java -Xms4G -Xmx4G -jar paper-1.21.11.jar nogui
+java -Xms4G -Xmx4G -jar paper-1.21.1.jar nogui
 ```
+
+> **Agent 自动注入**：引擎在 `serverguard.minecraft.auto-inject=true`（默认开启）且 `working-dir` 已配置时，会在启动时自动把 `serverguard-agent.jar` 部署到 `workingDir/plugins/` 目录，无需手工复制。
 
 ### 方式三：从源码构建
 
@@ -103,14 +115,14 @@ java -Xms4G -Xmx4G -jar paper-1.21.11.jar nogui
 git clone https://github.com/ZpjDev/Aluer.git
 cd Aluer
 
-# 编译
-./apache-maven-3.9.6/bin/mvn compile
+# 编译（强制 clean，禁止增量编译）
+./apache-maven-3.9.6/bin/mvn clean compile
 
-# 运行全量测试（323 项）
-./apache-maven-3.9.6/bin/mvn test
+# 运行全量测试（456 项）
+./apache-maven-3.9.6/bin/mvn clean test
 
 # 打包
-./apache-maven-3.9.6/bin/mvn package -DskipTests
+./apache-maven-3.9.6/bin/mvn clean package -DskipTests
 
 # JAR 产物在 target/serverguard.jar
 ```
@@ -121,6 +133,7 @@ cd Aluer
 
 | 版本 | 日期 | 核心更新 |
 |------|------|----------|
+| **V5.4** | 2026-10 | 多平台/多版本支持（Spigot/Paper/Purpur/Folia 1.12.2+）· ServerGuard 插件系统 · Agent 自动注入与周期补注入 · 融合 Grim（BadPackets/AimModulo360/GroundSpoof）与 NoCheatPlus（NoSwing/GodMode/FastHeal/NoWeb/FastLadder）· PacketEvents 依赖 · 进程/文件安全扫描 · 进程定位器 |
 | **V5.3** | 2026-05 | 世界/玩家/杂物类外挂对抗：SpeedMine · FastUse · NoInteract · AutoMine · VeinMiner · AutoTool · FakePlayer · PistonAura · Anchor · StashFinder |
 | **V5.2** | 2026-05 | 移动类外挂全对抗：NoSlow · Spider · Step · PacketFly · AirJump · LongJump · AntiHunger · FastFall · VClip · NoFall 增强 |
 | **V5.1** | 2026-05 | 战斗类外挂全对抗：Criticals · AutoCrystal · AutoTotem · Surround · AutoTrap · AutoArmor · ChestSwap · AutoLog · Hitboxes · BowAimbot |
@@ -137,11 +150,12 @@ cd Aluer
 +---------------------------------------------------------------------------+
 |                                                                            |
 |   +----------------------------+          WebSocket           +--------------------------+
-|   |     PaperMC Server         | <==========================> |   ServerGuard Engine     |
-|   |     (Minecraft 服务端)      |   ws://host:8080/agent       |   (Spring Boot :8080)    |
+|   |     Minecraft Server       | <==========================> |   ServerGuard Engine     |
+|   |     (Spigot/Paper/Purpur)  |   ws://host:8080/agent       |   (Spring Boot :8080)    |
+|   |     Folia, 1.12.2+         |                              |                          |
 |   |                            |                              |                          |
 |   |   +--------------------+   |   上行 (Agent → Server)       |   +------------------+   |
-|   |   | AluerPlugin (Agent) |   |   EVENT / METRICS / ALERT   |   | 135+ Security    |   |
+|   |   | AluerPlugin (Agent) |   |   EVENT / METRICS / ALERT   |   | 170+ Security    |   |
 |   |   | extends JavaPlugin  |   |   HEARTBEAT / HANDSHAKE     |   | Modules          |   |
 |   |   |                    |   |   COMMAND_RESULT            |   +------------------+   |
 |   |   | 生命周期:           |   |                              |   +------------------+   |
@@ -159,18 +173,18 @@ cd Aluer
 |   |   | CommandEventListnr |   |                              |   +------------------+   |
 |   |   | BlockEventListener |   |                              |   +------------------+   |
 |   |   | InventoryEventListn|   |                              |   | Kernel Engine    |   |
-|   |   | EntityEventListener|   |                              |   | - 5模块信号聚合   |   |
+|   |   | EntityEventListener|   |                              |   | - 信号聚合        |   |
 |   |   | WorldEventListener |   |                              |   | - 热/共振/控制    |   |
-|   |   | PacketEventListener|   |                              |   | - 8工作流决策     |   |
+|   |   | PacketEventListener|   |                              |   | - 工作流决策      |   |
 |   |   +--------------------+   |                              |   +------------------+   |
 |   |                            |                              |   +------------------+   |
 |   |   +--------------------+   |                              |   | Web Console      |   |
-|   |   | AgentWebSocket     |   |                              |   | http://:8080     |   |
-|   |   | Client             |   |                              |   | - Dashboard       |   |
-|   |   | (java.net.http)    |   |                              |   | - SSH Gateway     |   |
-|   |   | 断线重连 + 心跳      |   |                              |   | - Operations      |   |
-|   |   +--------------------+   |                              |   +------------------+   |
-|   |                            |                              |                          |
+|   |   | AgentWebSocket     |   |                              |   | Nebula Console   |   |
+|   |   | Client             |   |                              |   | http://:8080     |   |
+|   |   | (java.net.http)    |   |                              |   | - Dashboard       |   |
+|   |   | 断线重连 + 心跳      |   |                              |   | - SSH Gateway     |   |
+|   |   +--------------------+   |                              |   | - Operations      |   |
+|   |                            |                              |   +------------------+   |
 |   |   +--------------------+   |                              |   +------------------+   |
 |   |   | InternalCommand    |   |                              |   | AgentWebSocket    |   |
 |   |   | Executor           |   |                              |   | Server            |   |
@@ -183,7 +197,7 @@ cd Aluer
 ### 数据流详解
 
 **阶段 1：Agent 启动与连接**
-1. Paper 服务端加载 AluerPlugin（`load: STARTUP` 确保最先加载）
+1. Minecraft 服务端加载 AluerPlugin（`load: STARTUP` 确保最先加载）
 2. `onEnable()` 创建 `AgentWebSocketClient` 实例，异步连接到 `ws://host:8080/agent`
 3. 连接成功后发送 HANDSHAKE 消息（携带服务器版本、在线玩家数）
 4. 启动心跳定时器（每 15 秒发送 HEARTBEAT）
@@ -260,6 +274,14 @@ cd Aluer
 | `HANDSHAKE` | 初始握手（服务器版本、在线玩家数） | 连接建立时 |
 | `COMMAND_RESULT` | 命令执行结果回执（success + details） | 收到命令并执行后 |
 
+**下行消息类型（Server → Agent）：**
+
+| 类型 | 说明 |
+|------|------|
+| `COMMAND` | 执行防御/运维命令 |
+| `CONFIG` | 配置更新推送 |
+| `SHUTDOWN` | 关闭连接 |
+
 **下行命令类型（Server → Agent）：**
 
 | 命令 | 对应操作 | 实现方式 |
@@ -279,159 +301,246 @@ cd Aluer
 
 ## 安全模块完整清单
 
-### 战斗类反作弊（16 模块）
+模块已按职责拆分到 `com.aluer` 下的 `anticheat`（反作弊）、`defense`（纵深防御）、`network`（网络安全）、`server`（服务器漏洞）、`chat`（聊天安全）、`ml`/`ai`（行为分析与 AI）等子包。
 
-Meteor Client Combat 类别 100% 覆盖。每个模块均包含完整的检测逻辑、线程安全数据结构、配置开关和告警类型。
+### 战斗类反作弊（`anticheat.combat`，20 模块）
 
-| # | 模块类名 | 对抗的外挂 | 检测原理 | 告警类型 | 配置开关 |
-|---|---------|----------|---------|---------|---------|
-| 1 | `AntiKillAuraService` | KillAura（杀戮光环） | 3 秒窗口内目标切换 > 4 个 · 连续 5 次攻击角度偏差 < 5° 判定 Aimbot · 最大攻击距离精确命中 · 单 tick 多点攻击 | `SECURITY_KILL_AURA` | `anti-kill-aura` |
-| 2 | `AntiReachService` | Reach（攻击距离扩展） | 攻击距离 > 3.3 方块标记可疑 · > 5.0 方块即时拦截 · 位置回溯验证 · 极限距离命中率分析 | `SECURITY_REACH` | `anti-reach` |
-| 3 | `AntiAutoClickerService` | AutoClicker（自动连点） | CPS > 20 标记 · 连续 50+ 次攻击间隔方差 < 0.08（机械点击） · 点击间隔香农熵分析 | `SECURITY_AUTO_CLICKER` | `anti-auto-clicker` |
-| 4 | `AntiCriticalsService` | Criticals（自动暴击） | 零垂直速度 + 地面状态 + 产生暴击 → 不可能 · 无跳跃暴击率 > 20% → 异常 · 连续暴击跳检测 | `SECURITY_CRITICALS` | `anti-criticals` |
-| 5 | `AntiAutoCrystalService` | AutoCrystal（自动末影水晶） | 末影水晶在同 tick 放置于黑曜石上方 → 物理不可能 · 水晶引爆 < 2 tick → 自动化 · 最优爆炸位置计算匹配 | `SECURITY_AUTO_CRYSTAL` | `anti-auto-crystal` |
-| 6 | `AntiAutoTotemService` | AutoTotem（自动不死图腾） | 图腾消耗 → 新图腾副手装备 < 50ms → 自动化 · 连续 5+ 图腾使用均为 < 100ms → 确认 · 人类反应时间 > 200ms | `SECURITY_AUTO_TOTEM` | `anti-auto-totem` |
-| 7 | `AntiSurroundService` | Surround（自动包围） | 玩家脚下方块在 4 方向同时放置 → 自动化 · 放置间隔 < 2 tick → 物理不可能 · 防御方块类型检测（黑曜石/末影箱） | `SECURITY_SURROUND` | `anti-surround` |
-| 8 | `AntiAutoTrapService` | AutoTrap（自动困笼） | 目标玩家周围方块网格在 < 1 秒内完成 → 自动化 · 活塞放置 + 激活同 tick → 物理不可能 · 精确围笼位置计算 | `SECURITY_AUTO_TRAP` | `anti-auto-trap` |
-| 9 | `AntiAutoArmorService` | AutoArmor（自动盔甲） | 4 个盔甲槽位在同一 tick 完成更换 → 自动化 · 打开背包 → 换装 → 关闭背包 < 3 tick · 加入时立即装备全套 | `SECURITY_AUTO_ARMOR` | `anti-auto-armor` |
-| 10 | `AntiChestSwapService` | ChestSwap（快速胸甲切换） | 胸甲 ↔ 鞘翅互换 < 1 tick · 受伤时即时切换逃避伤害 · 连续快速乒乓切换 | `SECURITY_CHEST_SWAP` | `anti-chest-swap` |
-| 11 | `AntiAutoLogService` | AutoLog（自动断线） | 受伤 → 断线 < 500ms · 低血量（< 8HP）时断线 · 多次断线重连循环 < 5 秒 · 排除正常超时（30s+） | `SECURITY_AUTO_LOG` | `anti-auto-log` |
-| 12 | `AntiHitboxesService` | Hitboxes（扩大碰撞箱） | 攻击射线到实体中心的最小距离异常 · 边缘命中率 > 60% · 实体碰撞箱理论范围外命中 | `SECURITY_HITBOXES` | `anti-hitboxes` |
-| 13 | `AntiBowAimBotService` | BowAimbot（弓箭自瞄） | 移动目标命中率 > 90% · 弓箭瞬发（无蓄力）精准命中 · 弹道预测精准度（预判移动方向） · 远距离移动目标持续命中 | `SECURITY_BOW_AIMBOT` | `anti-bow-aimbot` |
-| 14 | `AntiVelocityService` | Velocity（击退修改） | 受击后水平速度变化 < 预期 50% → 抗击退 · 零击退连续受击 · 击退方向异常（固定方向/无垂直分量） | `SECURITY_VELOCITY` | `anti-velocity` |
-| 15 | `AntiAnchorService` | Anchor（洞穴锚定） | 封闭空间（1x1 或 1x2）受击零位移 < 0.01 方块 · 连续多次受击同一坐标 · 多次锚定重入同一位置 | `SECURITY_ANCHOR` | `anti-anchor` |
+| # | 模块类名 | 对抗的外挂 | 检测原理 |
+|---|---------|----------|---------|
+| 1 | `AntiKillAuraService` | KillAura（杀戮光环） | 3 秒窗口内目标切换 > 4 个 · 连续 5 次攻击角度偏差 < 5° · 最大攻击距离精确命中 · 单 tick 多点攻击 |
+| 2 | `AntiReachService` | Reach（攻击距离扩展） | 攻击距离 > 3.3 方块标记可疑 · > 5.0 方块即时拦截 · 位置回溯验证 |
+| 3 | `AntiAutoClickerService` | AutoClicker（自动连点） | CPS > 20 标记 · 连续 50+ 次攻击间隔方差 < 0.08 · 点击间隔香农熵分析 |
+| 4 | `AntiCriticalsService` | Criticals（自动暴击） | 零垂直速度 + 地面状态 + 产生暴击 → 不可能 · 无跳跃暴击率 > 20% |
+| 5 | `AntiAutoCrystalService` | AutoCrystal（自动末影水晶） | 末影水晶同 tick 放置于黑曜石上方 · 水晶引爆 < 2 tick · 最优爆炸位置计算 |
+| 6 | `AntiAutoTotemService` | AutoTotem（自动不死图腾） | 图腾消耗 → 新图腾装备 < 50ms · 连续 5+ 图腾使用均 < 100ms |
+| 7 | `AntiSurroundService` | Surround（自动包围） | 脚下方块 4 方向同时放置 · 放置间隔 < 2 tick · 防御方块类型检测 |
+| 8 | `AntiAutoTrapService` | AutoTrap（自动困笼） | 目标周围方块网格 < 1 秒完成 · 活塞放置 + 激活同 tick |
+| 9 | `AntiAutoArmorService` | AutoArmor（自动盔甲） | 4 个盔甲槽位同 tick 更换 · 打开背包 → 换装 → 关闭 < 3 tick |
+| 10 | `AntiChestSwapService` | ChestSwap（快速胸甲切换） | 胸甲 ↔ 鞘翅互换 < 1 tick · 受伤时即时切换 |
+| 11 | `AntiAutoLogService` | AutoLog（自动断线） | 受伤 → 断线 < 500ms · 低血量断线 · 排除正常超时 |
+| 12 | `AntiHitboxesService` | Hitboxes（扩大碰撞箱） | 攻击射线到实体中心最小距离异常 · 边缘命中率 > 60% |
+| 13 | `AntiBowAimBotService` | BowAimbot（弓箭自瞄） | 移动目标命中率 > 90% · 弓箭瞬发精准命中 · 弹道预测精准度 |
+| 14 | `AntiVelocityService` | Velocity（击退修改） | 受击后水平速度变化 < 预期 50% · 零击退连续受击 |
+| 15 | `AntiAnchorService` | Anchor（洞穴锚定） | 封闭空间受击零位移 < 0.01 方块 · 连续多次受击同一坐标 |
+| 16 | `AntiPistonAuraService` | PistonAura（活塞光环） | 战斗上下文活塞激活率异常 · 放置 + 激活同 tick · 活塞方向瞄准玩家 |
+| 17 | `AntiAimService` | AimModulo360（Grim） | 原始 yaw 环绕（>320° 且上次 <30°）· 360° 模运算绕过检测 |
+| 18 | `AntiNoSwingService` | NoSwing（无挥臂，NCP） | 挥臂标志缺失 + VL 累积/衰减判定 |
+| 19 | `AntiGodModeService` | GodMode（无敌，NCP） | 受击后生命值不下降（无敌状态异常） |
+| 20 | `AntiFastHealService` | FastHeal（快速回血，NCP） | 回血间隔小于合法间隔 |
 
-### 移动类反作弊（19 模块）
+### 移动类反作弊（`anticheat.movement`，21 模块）
 
-全类型移动外挂对抗覆盖。
+| # | 模块类名 | 对抗的外挂 | 检测原理 |
+|---|---------|----------|---------|
+| 1 | `AntiFlyDetectionService` | Fly（飞行外挂） | 非创造/旁观/鞘翅状态垂直上升 · 悬空 > 5 秒 · 上下震荡模式 |
+| 2 | `AntiSpeedService` | Speed（加速） | 生存模式水平速度 > 0.65 方块/tick · > 1.2 方块/tick 即时拦截 |
+| 3 | `AntiJesusService` | Jesus（水上行走） | 水/岩浆中 y 坐标不下降 · 水中水平高速移动 |
+| 4 | `AntiNoFallService` | NoFall（无摔伤） | 坠落距离 > 3.5 方块但伤害 < 1.0 · GroundSpoof + VClip 组合 |
+| 5 | `AntiTimerService` | Timer（游戏加速） | 移动 tick 间隔 < 50ms · 持续 30 个加速 tick → 确认 |
+| 6 | `AntiPhaseService` | Phase（穿墙） | 两次位置间存在固体方块 · 射线追踪验证 · 排除合法穿透 |
+| 7 | `AntiBlinkService` | Blink（闪烁） | 断线 → 重连 < 5 秒 · 受伤后 < 1 秒断线 |
+| 8 | `AntiScaffoldService` | Scaffold（自动搭路） | 脚下方块快速连续放置 · 悬空搭路模式 |
+| 9 | `AntiSpiderService` | Spider（爬墙） | 无爬墙方块贴墙垂直上升 · 连续贴墙移动 |
+| 10 | `AntiStepService` | Step（自动跨步） | 非跳跃 ΔY > 0.9 单 tick · 无跳跃粒子/音效 |
+| 11 | `AntiNoSlowService` | NoSlow（无减速） | 使用物品时移速 > 正常值 · 各物品类型独立阈值 |
+| 12 | `AntiPacketFlyService` | PacketFly（数据包飞行） | 连续悬浮不落地 · 上下快速震荡模式 |
+| 13 | `AntiAirJumpService` | AirJump（空中跳跃） | 离地 > 1 方块时发出跳跃包 · 连续空中跳跃 |
+| 14 | `AntiLongJumpService` | LongJump（远跳） | 单次跳跃水平距离 > 8 方块 · 水平速度衰减曲线异常 |
+| 15 | `AntiAntiHungerService` | AntiHunger（免饥饿） | 高活动量零饥饿消耗 · onGround 伪造跳过饥饿 tick |
+| 16 | `AntiFastFallService` | FastFall（快速下落） | 持续下落速度 > 5 方块/tick（终端速度 3.92） |
+| 17 | `AntiVClipService` | VClip（垂直穿墙） | 单 tick ΔY > 3 方块 · 中间位置存在固体方块 · 排除合法传送 |
+| 18 | `AntiElytraFlyService` | ElytraFly（鞘翅操控） | 鞘翅滑翔速度 > 60 方块/秒 · 无烟花持续上升 |
+| 19 | `AntiFastLadderService` | FastLadder（快速爬梯，NCP） | 攀爬状态单 tick 上升超速 |
+| 20 | `AntiNoWebService` | NoWeb（蜘蛛网减速绕过，NCP） | 蜘蛛网内水平位移超速 |
+| 21 | `AntiGroundSpoofService` | GroundSpoof（伪造地面，Grim） | onGround=true 却持续下落的伪造地面状态 |
 
-| # | 模块类名 | 对抗的外挂 | 检测原理 | 告警类型 | 配置开关 |
-|---|---------|----------|---------|---------|---------|
-| 1 | `AntiFlyDetectionService` | Fly（飞行外挂） | 非创造/旁观/鞘翅状态垂直上升 · 悬空 > 5 秒无下降 · 悬浮时无状态效果 · 上下震荡模式（PacketFly 特征） | `SECURITY_FLY` | `anti-fly` |
-| 2 | `AntiSpeedService` | Speed（加速） | 生存模式水平速度 > 0.65 方块/tick · > 1.2 方块/tick 即时拦截 · GroundSpoof + 高速组合 · 加速时段连续性 | `SECURITY_SPEED` | `anti-speed` |
-| 3 | `AntiJesusService` | Jesus（水上行走） | 水/岩浆中 y 坐标不下降 · 水中水平高速移动 · 非游泳/飞行状态 · 水面高度异常 | `SECURITY_JESUS` | `anti-jesus` |
-| 4 | `AntiNoFallService` | NoFall（无摔伤） | 坠落距离 > 3.5 方块但伤害 < 1.0 · GroundSpoof：客户端声称 onGround 但 y 持续下降 · 坠落累积检测 · VClip + NoFall 组合 | `SECURITY_NOFALL` | `anti-no-fall` |
-| 5 | `AntiTimerService` | Timer（游戏加速） | 移动 tick 间隔 < 50ms（正常 20TPS = 50ms） · 持续 30 个加速 tick → 确认 · 移动频率稳定性检测 | `SECURITY_TIMER` | `anti-timer` |
-| 6 | `AntiPhaseService` | Phase（穿墙） | 两次位置间存在固体方块 · 射线追踪验证 · 门/栅栏门合法穿透排除 · 传送门相位漏洞 | `SECURITY_PHASE` | `anti-phase` |
-| 7 | `AntiBlinkService` | Blink（闪烁） | 断线 → 重连 < 5 秒 · 受伤后 < 1 秒断线 · 多次闪烁循环 · 重连后位置跳跃 | `SECURITY_BLINK` | `anti-blink` |
-| 8 | `AntiScaffoldService` | Scaffold（自动搭路） | 脚下方块快速连续放置 · 放置角度不随移动变化 · 悬空搭路模式 · 同 tick 多方向放置 | `SECURITY_SCAFFOLD` | `anti-scaffold` |
-| 9 | `AntiSpiderService` | Spider（爬墙） | 无爬墙方块（梯子/藤蔓/脚手架）贴墙垂直上升 · 连续贴墙移动 · 墙面临近方块类型检测 | `SECURITY_SPIDER` | `anti-spider` |
-| 10 | `AntiStepService` | Step（自动跨步） | 非跳跃 ΔY > 0.9 单 tick · 无跳跃粒子/音效 · 连续完整方块跨越 | `SECURITY_STEP` | `anti-step` |
-| 11 | `AntiNoSlowService` | NoSlow（无减速） | 使用物品（吃食物/拉弓/举盾/喝药水）时移速 > 正常值 · 各物品类型独立阈值 · 连续使用 + 高速移动 | `SECURITY_NO_SLOW` | `anti-no-slow` |
-| 12 | `AntiPacketFlyService` | PacketFly（数据包飞行） | 连续悬浮不落地 · 上下快速震荡模式 · 无鞘翅/无悬浮/无飞行状态效果 · 移动速度异常 | `SECURITY_PACKET_FLY` | `anti-packet-fly` |
-| 13 | `AntiAirJumpService` | AirJump（空中跳跃） | 离地 > 1 方块时发出跳跃包 · y 速度在离地状态下变正 · 连续空中跳跃 · 无合法空中跳跃来源 | `SECURITY_AIR_JUMP` | `anti-air-jump` |
-| 14 | `AntiLongJumpService` | LongJump（远跳） | 单次跳跃水平距离 > 8 方块 · 跳跃后空气阻力模型异常（持续高速） · 水平速度衰减曲线检测 · Bunny Hop 连跳维持高速 | `SECURITY_LONG_JUMP` | `anti-long-jump` |
-| 15 | `AntiAntiHungerService` | AntiHunger（免饥饿） | 高活动量（疾跑+跳跃）零饥饿消耗 5 分钟 · 每 1000 方块移动饥饿消耗 < 5 单位（正常 15-25） · onGround 伪造跳过饥饿 tick | `SECURITY_ANTI_HUNGER` | `anti-anti-hunger` |
-| 16 | `AntiFastFallService` | FastFall（快速下落） | 持续下落速度 > 5 方块/tick（终端速度 3.92） · 瞬时下落 > 10 方块单 tick · 下落加速度异常 | `SECURITY_FAST_FALL` | `anti-fast-fall` |
-| 17 | `AntiVClipService` | VClip（垂直穿墙） | 单 tick ΔY > 3 方块 · 中间位置存在固体方块 · 排除合法传送（末影珍珠/紫颂果//tp/载具） · 连续 VClip | `SECURITY_VCLIP` | `anti-vclip` |
-| 18 | `AntiElytraFlyService` | ElytraFly（鞘翅操控） | 鞘翅滑翔速度 > 60 方块/秒 · 无烟花持续上升 · 高度操控异常 · 速度震荡模式 | `SECURITY_ELYTRA_FLY` | `anti-elytra-fly` |
+### 世界类反作弊（`anticheat.world`，14 模块）
 
-### 世界与玩家类反作弊（13 模块）
+| # | 模块类名 | 对抗的外挂 | 检测原理 |
+|---|---------|----------|---------|
+| 1 | `AntiNukerService` | Nuker（炸图） | 短时间内破坏方块 > 25 个 · 同 tick 破坏多个不相邻方块 |
+| 2 | `AntiAutoMineService` | AutoMine（自动挖矿） | 挖掘间隔方差 < 0.05 秒 · 连续精准切换目标 · 无交互挖掘 |
+| 3 | `AntiSpeedMineService` | SpeedMine（加速挖掘） | 黑曜石破坏 < 1 秒 · 石头破坏 < 0.1 秒 · 无视线挖掘 |
+| 4 | `AntiFastBreakService` | FastBreak（快速破坏） | 方块破坏时间 < 标准时间 × 0.5 · 附魔/状态效果调整 |
+| 5 | `AntiFastUseService` | FastUse（快速使用） | 食物消耗 < 1.0 秒 · 弓箭拉满 < 0.5 秒 · 药水 < 0.8 秒 |
+| 6 | `AntiNoInteractService` | NoInteract（交互绕过） | 持剑打开箱子 · 未潜行 + 持有阻挡物品 + 成功打开容器 |
+| 7 | `AntiVeinMinerService` | VeinMiner（连锁挖矿） | 相邻同类型矿石连续快速破坏 · 穿墙矿石挖掘 |
+| 8 | `AntiAutoToolService` | AutoTool（自动工具） | 切换最优工具 + 开始挖掘同 tick · 完美工具匹配率 > 90% |
+| 9 | `AntiAutoFishService` | AutoFish（自动钓鱼） | 鱼咬钩 < 100ms 收杆 · 连续快速收杆 > 5 次/30 秒 |
+| 10 | `AntiChestStealService` | ChestSteal（自动偷箱） | 打开箱子 → 取物 < 200ms · 连续快速取走整组物品 |
+| 11 | `AntiXrayDetectionService` | Xray（透视） | 钻石/矿石发现率异常 · 直线挖掘轨迹 · 暗处精准定位矿物 |
+| 12 | `AntiBaritoneService` | Baritone（AI 矿透） | 路径平滑度 > 0.95 · 行为重复率异常 · 无视觉反馈挖掘 |
+| 13 | `AntiGriefDetectionService` | Grief（破坏） | 贵重方块大量破坏 · TNT 频繁使用 · 纵火模式 |
+| 14 | `AntiDupeDetectionService` | Dupe（物品复制） | 堆叠异常 / 高价值暴涨 / 容器复制 / 死亡复制等 |
 
-全类型世界/玩家外挂对抗覆盖。
+### 玩家类反作弊（`anticheat.player`，9 模块）
 
-| # | 模块类名 | 对抗的外挂 | 检测原理 | 告警类型 | 配置开关 |
-|---|---------|----------|---------|---------|---------|
-| 1 | `AntiNukerService` | Nuker（炸图） | 短时间内破坏方块 > 25 个 · 同一 tick 破坏多个不相邻方块 · 破坏无视线接触 | `SECURITY_NUKER` | `anti-nuker` |
-| 2 | `AntiAutoMineService` | AutoMine（自动挖矿） | 挖掘间隔方差 < 0.05 秒（机械节奏） · 连续精准切换目标 · 视角追踪检测 · 无交互挖掘 | `SECURITY_AUTO_MINE` | `anti-auto-mine` |
-| 3 | `AntiSpeedMineService` | SpeedMine（加速挖掘） | 黑曜石（标准 9.4 秒）破坏 < 1 秒 · 石头破坏 < 0.1 秒（标准 0.3） · 连续快速破坏 · 无视线挖掘（PacketMine） | `SECURITY_SPEED_MINE` | `anti-speed-mine` |
-| 4 | `AntiFastBreakService` | FastBreak（快速破坏） | 方块破坏时间 < 标准时间 × 0.5 · 附魔/状态效果/正确工具调整 · 连续快速破坏计数 | `SECURITY_FAST_BREAK` | `anti-fast-break` |
-| 5 | `AntiFastUseService` | FastUse（快速使用） | 食物消耗 < 1.0 秒（标准 1.6 秒） · 弓箭拉满 < 0.5 秒 · 药水饮用 < 0.8 秒 · 盾牌瞬举 | `SECURITY_FAST_USE` | `anti-fast-use` |
-| 6 | `AntiNoInteractService` | NoInteract（交互绕过） | 持剑打开箱子等容器 · 未潜行 + 持有阻挡物品 + 成功打开容器 · 实体交互绕过 | `SECURITY_NO_INTERACT` | `anti-no-interact` |
-| 7 | `AntiVeinMinerService` | VeinMiner（连锁挖矿） | 相邻同类型矿石连续快速破坏 · 无视角转向矿石定位 · 穿墙矿石挖掘 · 发现率异常 | `SECURITY_VEIN_MINER` | `anti-vein-miner` |
-| 8 | `AntiAutoToolService` | AutoTool（自动工具） | 切换到最优工具 + 开始挖掘同 tick · 完美工具匹配率 > 90% · 挖掘前无工具预览时间 | `SECURITY_AUTO_TOOL` | `anti-auto-tool` |
-| 9 | `AntiAutoFishService` | AutoFish（自动钓鱼） | 鱼咬钩 < 100ms 收杆 · 连续快速收杆 > 5 次/30秒 · 收杆时机精准度分析 | `SECURITY_AUTO_FISH` | `anti-auto-fish` |
-| 10 | `AntiChestStealService` | ChestSteal（自动偷箱） | 打开箱子 → 取物 < 200ms · 连续快速取走整组物品 · 他人容器快速扫描 | `SECURITY_CHEST_STEAL` | `anti-chest-steal` |
-| 11 | `AntiXrayDetectionService` | Xray（透视） | 钻石/矿石发现率异常 · 直线挖掘轨迹 · 暗处精准定位矿物 · 矿石与总挖掘比异常 | `SECURITY_XRAY` | `anti-xray` |
-| 12 | `AntiBaritoneService` | Baritone（AI矿透） | 路径平滑度 > 0.95 · 行为重复率异常 · 无视觉反馈挖掘 · 全自动导航 | `SECURITY_BARITONE` | `anti-baritone` |
-| 13 | `AntiGriefDetectionService` | Grief（破坏） | 贵重方块（钻石块/信标/附魔台）大量破坏 · TNT 频繁使用 · 纵火模式 · 连续破坏 | `SECURITY_GRIEF` | `anti-grief` |
+| # | 模块类名 | 对抗的外挂 | 检测原理 |
+|---|---------|----------|---------|
+| 1 | `AntiFakePlayerService` | FakePlayer（假人） | 无心跳响应 · 无世界交互 · 完美静止或循环巡逻 · 受击无反 |
+| 2 | `AntiInventoryManipulationService` | Inventory（背包操控） | 非正常速度背包操作 · 非法槽位移动 · 一键整理异常速度 |
+| 3 | `AntiNameSpoofService` | NameSpoof（名称冒充） | 管理员/知名玩家昵称匹配 · Unicode 同形字替换 |
+| 4 | `AntiSkinSpoofService` | SkinSpoof（皮肤伪造） | 皮肤模型数据异常 · 皮肤 URL 来源检测 |
+| 5 | `AntiAltAccountService` | AltAccount（小号） | 同 IP 多账号在线 · 行为相似度分析 · 登录时间模式关联 |
+| 6 | `AntiOfflineModeSpoofService` | OfflineSpoof（离线 UUID） | 正版 UUID 冲突检测 · IP 关联验证 · 离线-正版交叉验证 |
+| 7 | `AntiVPNProxyService` | VPN/Proxy（代理） | 已知 VPN IP 库 · 托管 ASN 匹配 |
+| 8 | `AntiBotDetectionService` | Bot（机器人） | 命名模式 · 加入速率 · 行为熵值 |
+| 9 | `AntiBadPacketsService` | BadPackets（恶意数据包，Grim） | 重复 held item slot / 未睡觉却发送起床 / pitch 越界 / 连续移动包无位置更新 / 重复 sprint 状态 |
 
-### 杂物类反作弊（9 模块）
+### 服务器漏洞防护（`server`，7 模块）
 
-| # | 模块类名 | 对抗的外挂 | 检测原理 | 告警类型 | 配置开关 |
-|---|---------|----------|---------|---------|---------|
-| 1 | `AntiDupeDetectionService` | Dupe（物品复制） | 9 种复制法检测（堆叠异常/高价值暴涨/容器复制/死亡复制等） | `SECURITY_DUPE` | `anti-dupe` |
-| 2 | `AntiFakePlayerService` | FakePlayer（假人） | 无心跳响应 · 无世界交互 · 无认证完成 · 完美静止或循环巡逻 · 受击无反 | `SECURITY_FAKE_PLAYER` | `anti-fake-player` |
-| 3 | `AntiPistonAuraService` | PistonAura（活塞光环） | 战斗上下文活塞激活率异常 · 放置+激活同 tick · 活塞方向瞄准附近玩家 | `SECURITY_PISTON_AURA` | `anti-piston-aura` |
-| 4 | `AntiStashFinderService` | StashFinder（仓库扫描） | 网格模式区块加载 · 零交互区块扫描 · 最大速度直线/螺旋加载 | `SECURITY_STASH_FINDER` | `anti-stash-finder` |
-| 5 | `AntiInventoryManipulationService` | Inventory（背包操控） | 非正常速度背包操作 · 非法槽位移动 · 一键整理异常速度 | `SECURITY_INVENTORY_MANIPULATION` | `anti-inventory-manipulation` |
-| 6 | `AntiNameSpoofService` | NameSpoof（名称冒充） | 管理员/知名玩家昵称匹配 · 相似字符替换（Unicode 同形字） | `SECURITY_NAME_SPOOF` | `anti-name-spoof` |
-| 7 | `AntiSkinSpoofService` | SkinSpoof（皮肤伪造） | 皮肤模型数据异常 · 皮肤 URL 来源检测 | `SECURITY_SKIN_SPOOF` | `anti-skin-spoof` |
-| 8 | `AntiAltAccountService` | AltAccount（小号） | 同 IP 多账号在线 · 行为相似度分析 · 登录时间模式关联 | `SECURITY_ALT_ACCOUNT` | `anti-alt-account` |
-| 9 | `AntiOfflineModeSpoofService` | OfflineSpoof（离线UUID） | 正版 UUID 冲突检测 · IP 关联验证 · 离线-正版交叉验证 | `SECURITY_OFFLINE_MODE_SPOOF` | `anti-offline-mode-spoof` |
+| # | 模块类名 | 防护对象 |
+|---|---------|---------|
+| 1 | `AntiSignExploitService` | 告示牌 NBT 漏洞（超长 JSON / 无效组件 / NBT 炸弹） |
+| 2 | `AntiBookBanService` | 书与笔封禁漏洞（超大页码 / 超深 JSON 层级） |
+| 3 | `AntiResourcePackExploitService` | 资源包漏洞（恶意 URL / 超大文件 / 格式校验） |
+| 4 | `AntiTabCompleteCrashService` | Tab 补全崩溃（长文本 / 深度嵌套补全限制） |
+| 5 | `CrashExploitProtectionService` | 崩溃漏洞防护（超大包 / NBT 炸弹 / 书与笔攻击） |
+| 6 | `LagMachineDetectionService` | 卡服机检测（Observer 链 / TNT 堆 / 红石密度） |
+| 7 | `PacketFloodProtectionService` | 数据包洪水防护（每玩家每秒 200 包上限，超限踢出） |
 
-### 服务器漏洞防护（8 模块）
+### 纵深防御（`defense`，58 模块）
 
-| # | 模块类名 | 防护对象 | 告警类型 | 配置开关 |
-|---|---------|---------|---------|---------|
-| 1 | `AntiSignExploitService` | 告示牌 NBT 漏洞（超长JSON/无效组件/NBT炸弹） | `SECURITY_SIGN_EXPLOIT` | `anti-sign-exploit` |
-| 2 | `AntiBookBanService` | 书与笔封禁漏洞（超大页码/超深JSON层级） | `SECURITY_BOOK_BAN` | `anti-book-ban` |
-| 3 | `AntiResourcePackExploitService` | 资源包漏洞（恶意URL/超大文件/格式校验） | `SECURITY_RESOURCE_PACK_EXPLOIT` | `anti-resource-pack-exploit` |
-| 4 | `AntiTabCompleteCrashService` | Tab补全崩溃（长文本/深度嵌套补全限制） | `SECURITY_TAB_COMPLETE_CRASH` | `anti-tab-complete-crash` |
-| 5 | `CrashExploitProtectionService` | 崩溃漏洞防护（超大包/NBT炸弹/书与笔攻击） | `SECURITY_CRASH_EXPLOIT` | `crash-exploit` |
-| 6 | `CrashExploitSignatureDB` | 崩溃漏洞签名数据库（12 种已知签名：BookBan/SignCrash/ChunkBufferOverflow/ArmorStandNBT/IllegalPotionEffect等） | `SECURITY_CRASH_EXPLOIT` | `crash-exploit-signature-db` |
-| 7 | `LagMachineDetectionService` | 卡服机检测（Observer链/TNT堆/红石密度） | `SECURITY_LAG_MACHINE` | `lag-machine` |
-| 8 | `PacketFloodProtectionService` | 数据包洪水防护（每玩家每秒 200 包上限，超限踢出） | `SECURITY_PACKET_FLOOD` | `packet-flood-protection` |
+`AdvancedMalwareDetectionService`（恶意软件检测）· `AntiStashFinderService`（仓库扫描）· `BackdoorPluginScannerService`（后门插件）· `BackupIntegrityService`（备份完整性）· `BackupSecurityService`（备份安全）· `BotFingerprintDetector`（机器人指纹）· `ChunkLoadRateLimiter`（区块加载限速）· `CommandExecutionGuardService`（命令执行守护）· `ComplianceScannerService`（合规审计）· `ConfigTamperDetectionService`（配置篡改）· `ConnectionHandshakeValidator`（握手验证）· `ContainerSecurityService`（容器安全）· `CrashExploitSignatureDB`（崩溃签名库）· `CSPEnforcementService`（CSP 头强制）· `DatabaseFirewallService`（数据库防火墙）· `DataLossPreventionService`（数据防泄漏）· `DDoSDefenseCoordinator`（DDoS 协调）· `EncryptionService`（加密）· `EndpointDetectionResponseService`（EDR）· `EntityCountEnforcer`（实体数量）· `ExploitSignatureService`（漏洞签名）· `FileIntegrityMonitorService`（文件完整性）· `FileSecurityScannerService`（文件安全扫描：webshell/后门脚本）· `ForensicsCollectorService`（取证收集）· `GeoBlockService`（地理封锁）· `HoneypotService`（蜜罐）· `HostEnforcementService`（主机强制执行）· `HostIntrusionCountermeasureService`（主机入侵对抗）· `IncidentResponseService`（事件响应）· `IntrusionDetectionService`（IDS）· `IntrusionPreventionSystem`（IPS）· `JwtAuthService`（JWT 认证）· `LogAnalysisService`（日志分析）· `LogCorrelationService`（日志关联）· `MemoryProtectionService`（内存保护）· `NBTExploitPrevention`（NBT 漏洞防护）· `OPPrivilegeMonitorService`（OP 权限监控）· `PlayerSessionValidationService`（会话验证）· `PluginVerificationService`（插件校验）· `ProcessInjectionDetectionService`（进程注入检测）· `ProcessSecurityService`（进程安全扫描：挖矿木马/反弹 shell）· `ProtocolStateValidator`（协议状态机）· `RedstoneUpdateLimiter`（红石更新限速）· `SecureFileDeletionService`（安全删除）· `SecurityAutomationScheduler`（安全自动化）· `SecurityBaselineHardeningService`（安全基线）· `SecurityOrchestrationService`（安全编排）· `SessionManagementService`（会话管理）· `SIEMService`（SIEM）· `SSRFProtectionService`（SSRF 防护）· `ThreatHuntingService`（威胁狩猎）· `ThreatIntelligenceService`（威胁情报）· `TokenBucketRateLimiter`（令牌桶限速）· `TrafficShapingService`（流量整形）· `WafRequestFilter`（WAF 过滤器）· `WebApplicationFirewall`（WAF）· `XXEProtectionService`（XXE 防护）· `ZeroTrustArchitectureService`（零信任）
 
-### 网络协议安全（7 模块）
+### 网络安全（`network`，28 模块）
 
-| # | 模块类名 | 防护对象 | 告警类型 | 配置开关 |
-|---|---------|---------|---------|---------|
-| 1 | `ProtocolStateValidator` | 协议状态机验证：HANDSHAKE→STATUS→LOGIN→PLAY 四态转换，检测越态/回退/停滞 | `SECURITY_PROTOCOL_VIOLATION` | `protocol-validator` |
-| 2 | `TokenBucketRateLimiter` | 通用令牌桶速率限制器（可复用基元）：速率 R + 突发容量 B，自动老化清理 | — | `token-bucket-rate-limiter` |
-| 3 | `BotFingerprintDetector` | 五维机器人指纹：登录时序 · 命名模式（随机字母数字） · 移动熵值 · 聊天模式 · Ping 指纹 | `SECURITY_BOT_FINGERPRINT` | `bot-fingerprint` |
-| 4 | `NBTExploitPrevention` | NBT 漏洞防护：深度限制（最大64） · 尺寸/页数/行数校验 · Chunk NBT 溢出检测 | `SECURITY_NBT_EXPLOIT` | `nbt-exploit-prevention` |
-| 5 | `ConnectionHandshakeValidator` | 握手完整性验证：协议版本 · nextState 字段 · Ping 洪水 · 握手超时 · 端口扫描 | `SECURITY_HANDSHAKE_ANOMALY` | `handshake-validator` |
-| 6 | `DDoSProtectionService` | 7 类 DDoS 防护：SYN/UDP/ICMP/HTTP/Slowloris/MCStatus/MCLogin/MCRcon/MCQuery | `SECURITY_DDOS` | 多阈值配置 |
-| 7 | `DDoSDefenseCoordinator` | DDoS 多层防御协调：本地封锁 → 边缘挑战 → Minecraft 防御 → 告警通知 | `SECURITY_DDOS` | 多阈值配置 |
+`APIRateLimitService`（API 限速）· `ARPSpoofDetectionService`（ARP 欺骗）· `BruteForceProtectionService`（暴力破解）· `CloudflareIntegrationService`（Cloudflare 集成）· `ConnectionThrottleService`（连接限速）· `DDoSProtectionService`（DDoS 防护）· `DistributedAttackMitigationService`（分布式攻击缓解）· `DNSSecurityService`（DNS 安全）· `DNSTunnelDetectionService`（DNS 隧道）· `FirewallService`（防火墙）· `FlowAnalyzerService`（流量分析）· `GeoIPService`（GeoIP）· `IPReputationService`（IP 信誉）· `LoadBalancerService`（负载均衡）· `MinecraftProtocolSecurityService`（MC 协议安全）· `NetworkMonitorService`（网络监控）· `NetworkSegmentationService`（网络分段）· `NetworkSnifferService`（网络嗅探）· `NetworkThreatFusionService`（网络威胁融合）· `PacketFloodProtectionService`（数据包洪水）· `PacketInspectionService`（数据包检测）· `PortScanDetectionService`（端口扫描）· `ProtocolAnalysisService`（协议分析）· `RateLimitService`（速率限制）· `ReverseShellDetectionService`（反弹 Shell）· `SSLMonitorService`（SSL 监控）· `SSLTLSCertificateService`（SSL/TLS 证书）· `TrafficAnalysisService`（流量分析）
 
-### 服务器性能保护（3 模块）
+### 聊天与社交安全（`chat`，6 模块）
 
-| # | 模块类名 | 防护对象 | 告警类型 | 配置开关 |
-|---|---------|---------|---------|---------|
-| 1 | `ChunkLoadRateLimiter` | 区块加载速率限制：WARN(>20/s) → LIMIT(>40/s) → BLOCK(>60/s) 三级响应 · ChunkBan 极端坐标检测(>30M) | `SECURITY_CHUNK_RATE` | `chunk-load-rate-limiter` |
-| 2 | `EntityCountEnforcer` | 实体数量强制执行：每区块 30 上限 · 玩家生成 vs 自然生成区分 · 优先级清理（物品>XP球>矿车>盔甲架） · 同类实体群检测 | `SECURITY_ENTITY_LIMIT` | `entity-count-enforcer` |
-| 3 | `RedstoneUpdateLimiter` | 红石更新频率限制：WARN(>200/tick) → 降频(50%跳过) → 冻结(完全禁用) 三级 · Observer 时钟回路检测 · 指数退避冷却 | `SECURITY_REDSTONE_LAG` | `redstone-update-limiter` |
+| # | 模块类名 | 防护对象 |
+|---|---------|---------|
+| 1 | `ChatFloodProtectionService` | 聊天洪水（10 秒内 5 条消息触发） |
+| 2 | `AntiAdvertisementService` | IP/域名/群号正则匹配 |
+| 3 | `AntiPhishingLinkService` | 钓鱼链接/短链接/可疑域名 |
+| 4 | `AntiCommandAbuseService` | 敏感命令监控 + 命令注入检测 |
+| 5 | `PlayerPrivacyService` | IP 脱敏/坐标隐藏/日志匿名化 |
+| 6 | `ChatFilterService` | 聊天内容过滤 |
 
-### 聊天与社交安全（5 模块）
+### ML 与 AI 行为分析引擎（12 模块）
 
-| # | 模块类名 | 防护对象 | 告警类型 | 配置开关 |
-|---|---------|---------|---------|---------|
-| 1 | `ChatFloodProtectionService` | 聊天洪水（10秒内5条消息触发） | `CHAT_FLOOD` | `chat-flood-protection` |
-| 2 | `AntiAdvertisementService` | IP/域名/群号正则匹配 | `CHAT_ADVERTISEMENT` | `anti-advertisement` |
-| 3 | `AntiPhishingLinkService` | 钓鱼链接/短链接/可疑域名 | `CHAT_PHISHING` | `anti-phishing-link` |
-| 4 | `AntiCommandAbuseService` | 敏感命令监控 + 命令注入检测（\`${\` / \`&& rm\` / \`; rm\` / \`eval\`) | `COMMAND_ABUSE` | `anti-command-abuse` |
-| 5 | `PlayerPrivacyService` | IP 脱敏/坐标隐藏/日志匿名化 | — | `player-privacy` |
+| # | 模块类名 | 技术方法 |
+|---|---------|---------|
+| 1 | `BehavioralProfilingEngine` | 5 维特征向量 · Shannon 熵 · Z-score 基线 · 6 类玩家画像 |
+| 2 | `ThreatScoreAggregator` | 指数衰减加权 · 4 级威胁上报 · Top-N 威胁排名 |
+| 3 | `MovementPatternAnalyzer` | 100 tick 滑动窗口 · FFT 频谱分析 · 旋转平滑度 · 宏匹配 |
+| 4 | `CombatPatternRecognizer` | CPS 变异系数 · 多目标熵 · 扫视分析 · 超距攻击比 |
+| 5 | `AnomalyDetector` | 隔离森林（Isolation Forest）异常检测 |
+| 6 | `TimeSeriesPredictor` | TPS/CPU/Memory 时间序列预测 · 60 分钟预测视野 |
+| 7 | `DeepSeekClient` | DeepSeek API 客户端（告警分析/健康报告） |
+| 8 | `AIAutonomousService` | AI 自治防御服务 |
+| 9 | `AIStrategyEngine` | AI 策略引擎 |
+| 10 | `AluerSovereignEngine` | 主权 AI 引擎 |
+| 11 | `AdaptiveThreshold` | 自适应阈值 |
+| 12 | `AttackDetector` | 攻击模式检测 |
 
-### ML 与 AI 行为分析引擎（6 模块）
+---
 
-| # | 模块类名 | 技术方法 | 告警类型 |
-|---|---------|---------|---------|
-| 1 | `BehavioralProfilingEngine` | 5 维特征向量（移动熵/战斗率/采集率/社交率/探索率） · Shannon 熵计算 · Z-score 基线偏差 · tanh 复合异常评分 · 6 类玩家画像（NORMAL/GRINDER/EXPLORER/PVPER/SUSPICIOUS/BOT_LIKE） · 画像转换追踪 | `ML_BEHAVIOR_ANOMALY` |
-| 2 | `ThreatScoreAggregator` | 指数衰减加权聚合（weight = e^(-λt)） · 4 级威胁上报（MONITOR/WARN/ACTION/LOCKDOWN） · EMA 平滑 · 玩家+IP 独立评分 · Top-N 威胁排名 | `ML_THREAT_ESCALATION` |
-| 3 | `MovementPatternAnalyzer` | 100 tick 滑动窗口 · FFT 频谱分析检测 Timer hack · 旋转平滑度（Aimbot saccadic overshoot） · 完美角度比例（SnapAim 45/90°） · 宏/脚本序列匹配 · 自动跳跃间隔变异系数 | `ML_MOVEMENT_PATTERN` |
-| 4 | `CombatPatternRecognizer` | CPS 变异系数（COV < 0.08 = 机械） · 多目标 Shannon 熵 · 旋转加速度方差 & 符号翻转比（扫视分析） · 命中率异常（>90%） · 超距攻击比（>2.8 方块） | `ML_COMBAT_PATTERN` |
-| 5 | `AnomalyDetector` | 隔离森林（Isolation Forest）异常检测 · 滑动窗口数据流 · 多维度特征分析 | `AI_ANOMALY` |
-| 6 | `TimeSeriesPredictor` | TPS/CPU/Memory 时间序列预测 · 60 分钟预测视野 · 趋势分析 + 季节性分解 | — |
+## 开源反作弊融合
 
-### 纵深防御与主机安全（30+ 模块）
+项目采用 **GPL-3.0** 许可证（见根目录 `LICENSE`），与 [GrimAC](https://github.com/GrimAnticheat/Grim)、[NoCheatPlus](https://github.com/NoCheatPlus/NoCheatPlus) 等 GPL 开源反作弊许可证兼容，因此可直接合并其检测算法。
 
-WAF (`WebApplicationFirewall`) · IDS (`IntrusionDetectionService`) · IPS (`IntrusionPreventionSystem`) · SIEM (`SIEMService`) · Honeypot (`HoneypotService`) · EDR (`EndpointDetectionResponseService`) · ZeroTrust (`ZeroTrustArchitectureService`) · JWT (`JwtAuthService`) · SSL/TLS (`SSLTLSCertificateService` · `SSLMonitorService`) · GeoBlock (`GeoBlockService`) · VPN 检测 (`AntiVPNProxyService`) · DNS 隧道 (`DNSTunnelDetectionService`) · ARP 欺骗 (`ARPSpoofDetectionService`) · 反向 Shell (`ReverseShellDetectionService`) · 进程注入 (`ProcessInjectionDetectionService`) · 文件完整性 (`FileIntegrityMonitorService`) · 后门插件 (`BackdoorPluginScannerService`) · 合规审计 (`ComplianceScannerService`) · 取证 (`ForensicsCollectorService`) · 威胁狩猎 (`ThreatHuntingService`) · 事件响应 (`IncidentResponseService`) · 安全基线 (`SecurityBaselineHardeningService`) · 容器安全 (`ContainerSecurityService`) · 配置篡改 (`ConfigTamperDetectionService`) · OP 权限 (`OPPrivilegeMonitorService`) · 会话验证 (`PlayerSessionValidationService`) · 插件校验 (`PluginVerificationService`) · 备份完整性 (`BackupIntegrityService`) · 连接限速 (`ConnectionThrottleService`) · 安全自动化 (`SecurityAutomationScheduler`) · 安全编排 (`SecurityOrchestrationService`) · 主机强制执行 (`HostEnforcementService`) · 主机入侵对抗 (`HostIntrusionCountermeasureService`)
+**已合并的检测算法：**
+
+| 来源 | Check | Aluer 服务 |
+|------|-------|-----------|
+| GrimAC | BadPacketsA/C/D/E/F（held item slot / leave bed / pitch 越界 / 移动包无位置更新 / 重复 sprint） | `AntiBadPacketsService` |
+| GrimAC | AimModulo360（原始 yaw 环绕） | `AntiAimService.checkModulo360` |
+| GrimAC | GroundSpoof（onGround=true 却持续下落） | `AntiGroundSpoofService` |
+| NoCheatPlus | fight/NoSwing（挥臂标志 + VL） | `AntiNoSwingService` |
+| NoCheatPlus | fight/GodMode（受击后生命不降） | `AntiGodModeService` |
+| NoCheatPlus | fight/FastHeal（回血间隔过短） | `AntiFastHealService` |
+| NoCheatPlus | FastLadder（爬梯超速） | `AntiFastLadderService` |
+| NoCheatPlus | NoWeb（蜘蛛网内位移超速） | `AntiNoWebService` |
+
+**移动模拟引擎移植（进行中）：** 为支持 Reach / Timer / Velocity 等预测式检测，已启动 Grim 移动模拟引擎移植，保留 `ac.grim.grimac` 原始包名以便同步上游。当前已完成 **Phase 1**（引入 PacketEvents 2.7.0 依赖 + `utils/math` 基础库 8 个文件），完整移植约 8 万行，按依赖图逐层推进。
+
+详见 [`docs/开源反作弊融合.md`](docs/开源反作弊融合.md)。
+
+---
+
+## 多平台多版本支持
+
+通过 `com.aluer.platform` 平台抽象层，同一 Agent 插件可运行于全部 Bukkit 系平台，覆盖 **Minecraft 1.12.2 至今**。
+
+| 平台族 | 平台 | 说明 |
+|--------|------|------|
+| Bukkit 系 | Vanilla(CraftBukkit) / Spigot / Paper / Purpur / Pufferfish / Folia / Glowstone | 直接运行（`plugin.yml`，`api-version: '1.12'` + `folia-supported: true`） |
+| 代理端 | BungeeCord / Waterfall / Velocity | 需独立适配器（引擎已具备类型识别能力） |
+| 模组加载器 | Forge / NeoForge / Fabric / Sponge | 需独立适配器（引擎已具备类型识别能力） |
+
+**核心类型：**
+- `MinecraftVersion`：解析、比较版本号（1.12.2 → 1.21.x），支持 `isAtLeast` / `isSupported`。
+- `PlatformType`：平台类型枚举（Bukkit 系 / 代理端 / 模组加载器）。
+- `PlatformDetector`：运行时反射探测平台与版本。
+- `BukkitCompat`：跨版本反射兼容层，收敛所有"版本敏感"调用（`getPing` / `kick` / `broadcast` / `getTps`）。
+
+**进程定位器：** `MinecraftProcessDetector` 使用 `ProcessHandle` API 检测 Minecraft 服务器进程，支持按已知核心名（paper/spigot/purpur/folia/forge/fabric 等）自动识别，无需硬编码；`ServerDirectoryResolver` 自动寻找服务端真实工作目录与日志路径。
+
+详见 [`docs/插件系统与多平台支持.md`](docs/插件系统与多平台支持.md)。
+
+---
+
+## 插件系统
+
+插件系统允许第三方开发者以独立 JAR 扩展 ServerGuard 引擎能力，无需修改引擎源码。
+
+**核心类型（`com.aluer.pluginsystem`）：** `ServerGuardPlugin`（生命周期接口）· `Plugin`（元数据注解）· `PluginDescriptor`（描述符）· `PluginManager`（发现/加载/启用/停用）· `PluginContext`（插件上下文）· `PluginClassLoader`（隔离类加载器）· `PluginSystemService`（Spring 集成）。
+
+插件实现 `ServerGuardPlugin` 接口并用 `@Plugin` 注解声明元数据，打包后放入 `serverguard/plugins/` 目录即可自动加载：
+
+```java
+@Plugin(name = "my-guard", version = "1.0.0", author = "example",
+        description = "示例安全模块", depends = {})
+public class MyGuardPlugin implements ServerGuardPlugin {
+    private PluginContext context;
+
+    @Override
+    public void onLoad(PluginContext context) {
+        this.context = context;
+        context.registerCommand("myguard-scan", "扫描示例", args -> "scan complete");
+    }
+    // onEnable / onDisable ...
+}
+```
+
+```yaml
+serverguard:
+  plugin:
+    enabled: true
+    directory: ${SERVERGUARD_PLUGIN_DIR:serverguard/plugins}
+```
+
+---
+
+## Agent 插件自动注入
+
+ServerGuard 采用「外部引擎 + 游戏内 Agent」双体架构。引擎产物是 Spring Boot fat jar，其类位于 `BOOT-INF/classes/` 下，Bukkit 插件类加载器只识别 jar 根目录的标准类结构，因此 fat jar 无法被服务器直接加载。
+
+`com.aluer.deploy.AgentDeployService` 在运行时把 Agent 最小依赖闭包（`com.aluer.plugin / platform / agent / model` 包）重新打包成标准结构的插件 JAR，写入服务端 `plugins/` 目录，并支持**周期补注入**（防止插件被误删）。
+
+```yaml
+serverguard:
+  minecraft:
+    working-dir: /opt/minecraft
+    auto-inject: true
+    agent-jar-name: serverguard-agent.jar
+```
 
 ---
 
 ## 外挂对抗覆盖矩阵
 
-Aluer ServerGuard V5.0 实现对主流 Minecraft 外挂客户端全类型 hack 模块的检测覆盖。
+Aluer ServerGuard 实现对主流 Minecraft 外挂客户端全类型 hack 模块的检测覆盖。
 
-| 类别 | 常见外挂模块 | Aluer 对抗模块数 | 覆盖率 |
-|------|-------------|----------------|--------|
-| **Combat（战斗）** | KillAura · AimAssist · AutoCrystal · Criticals · Surround · AutoTrap · AutoArmor · AutoTotem · BowAimbot · Hitboxes · Velocity 等 20+ 种 | 16 | **100%** |
-| **Movement（移动）** | Fly · Speed · Jesus · NoFall · Timer · Phase · Blink · Scaffold · Spider · Step · NoSlow · PacketFly · AirJump · LongJump · ElytraFly · VClip 等 34+ 种 | 19 | **100%** |
-| **World（世界）** | Nuker · SpeedMine · VeinMiner · StashFinder · Xray · Grief · AutoMine · AutoFish · FastBreak 等 22+ 种 | 13 | **100%** |
-| **Player（玩家）** | AutoTool · FastUse · NoInteract · AntiHunger · ChestSwap · Reach · AutoEat 等 24+ 种 | 10 | **100%** |
-| **Misc（杂物）** | FakePlayer · PistonAura · AntiAim · InventoryTweaks · NameSpoof · AltAccount 等 10+ 种 | 9 | **100%** |
-| **总计** | **110+** | **66** | **100%** |
+| 类别 | 常见外挂模块 | Aluer 对抗模块数 |
+|------|-------------|----------------|
+| **Combat（战斗）** | KillAura · AimAssist · AutoCrystal · Criticals · Surround · AutoTrap · AutoArmor · AutoTotem · BowAimbot · Hitboxes · Velocity · Anchor · PistonAura 等 | 20 |
+| **Movement（移动）** | Fly · Speed · Jesus · NoFall · Timer · Phase · Blink · Scaffold · Spider · Step · NoSlow · PacketFly · AirJump · LongJump · ElytraFly · VClip 等 | 21 |
+| **World（世界）** | Nuker · SpeedMine · VeinMiner · Xray · Grief · AutoMine · AutoFish · FastBreak · Baritone 等 | 14 |
+| **Player（玩家）** | FakePlayer · InventoryTweaks · NameSpoof · AltAccount · BadPackets · Bot 等 | 9 |
+| **总计** | **110+ 种外挂** | **64** |
 
 ---
 
@@ -443,8 +552,8 @@ Aluer ServerGuard V5.0 实现对主流 Minecraft 外挂客户端全类型 hack �
 
 **系统要求：**
 - Java 21+
-- PaperMC 1.21.1 服务端
-- ServerGuard 引擎与 Paper 服务器可网络互通（同机 localhost 最优）
+- Bukkit 系服务器（Spigot / Paper / Purpur / Folia），Minecraft 1.12.2+
+- ServerGuard 引擎与服务器可网络互通（同机 localhost 最优）
 
 **步骤 1：启动 ServerGuard 引擎**
 
@@ -452,17 +561,18 @@ Aluer ServerGuard V5.0 实现对主流 Minecraft 外挂客户端全类型 hack �
 java -jar serverguard.jar
 # 输出：
 # ╔══════════════════════════════════════════════════════════════╗
-# ║          Aluer ServerGuard v5.0.0                           ║
+# ║          Aluer ServerGuard V5.0.0                           ║
 # ║          Mode: Agent Server (WebSocket)                     ║
 # ║          Agent WS: ws://0.0.0.0:8080/agent                 ║
 # ║          Web Console: http://0.0.0.0:8080/                 ║
 # ╚══════════════════════════════════════════════════════════════╝
 ```
 
-**步骤 2：安装 Agent 插件**
+**步骤 2：安装 Agent 插件**（引擎可自动注入，或手动安装）
 
 ```bash
-# 复制 JAR 到 plugins 目录
+# 方式 A：自动注入（推荐）—— 配置 working-dir 后引擎启动时自动部署
+# 方式 B：手动复制 JAR 到 plugins 目录
 cp serverguard.jar /opt/minecraft/plugins/AluerServerGuard.jar
 
 # 创建 Agent 配置目录和文件
@@ -471,14 +581,16 @@ cat > /opt/minecraft/plugins/AluerServerGuard/config.yml << 'EOF'
 # Aluer Agent 配置文件
 # Agent 通过 WebSocket 连接外部 ServerGuard 引擎
 server-url: ws://localhost:8080/agent
+# 是否在服务器控制台回显发往引擎的消息摘要（默认开启）
+log-outbound: true
 EOF
 ```
 
-**步骤 3：启动 Paper 服务器**
+**步骤 3：启动 Minecraft 服务器**
 
 ```bash
 cd /opt/minecraft
-java -Xms4G -Xmx4G -jar paper-1.21.11.jar nogui
+java -Xms4G -Xmx4G -jar paper-1.21.1.jar nogui
 
 # Agent 启动日志：
 # [AluerServerGuard] ═════════════════════════════════════════════
@@ -514,8 +626,8 @@ rcon.password=YOUR_STRONG_PASSWORD
 serverguard:
   mode: external
   minecraft:
-    process-name: paper-1.21.11.jar
-    working-dir: /opt/minecraft
+    process-name: ""          # 留空则自动识别
+    working-dir: ""           # 留空则自动寻找
     rcon:
       enabled: true
       host: localhost
@@ -536,10 +648,10 @@ java -jar serverguard.jar
 | 延迟 | < 1ms（同机） | RCON 50-200ms |
 | 事件吞吐 | 50,000+ 事件/秒 | 依赖日志写入速度 |
 | 数据精度 | Bukkit 事件级（精确到 tick） | 日志文本级（秒级延迟） |
-| Minecraft 侵入性 | 需安装 Paper 插件（50MB） | 零侵入（仅需 RCON 端口） |
+| Minecraft 侵入性 | 需安装 Paper 插件（几十 MB） | 零侵入（仅需 RCON 端口） |
 | 即时拦截能力 | 是（event.setCancelled） | 否（告警后执行） |
 | 反作弊精度 | 最高（原始事件数据） | 较低（日志文本匹配） |
-| 模块覆盖 | 全部 135+ 模块 | 外部监控模块（约 40 模块） |
+| 模块覆盖 | 全部 170+ 模块 | 外部监控模块（约 40 模块） |
 | 推荐场景 | **生产服务器（首选）** | 评测 / 临时监控 / 测试 |
 
 ---
@@ -553,51 +665,98 @@ serverguard:
   # 运行模式：plugin（Paper 插件 Agent 模式）或 external（传统外部监控）
   mode: ${SERVERGUARD_MODE:external}
 
+  # 插件系统
+  plugin:
+    enabled: true
+    directory: ${SERVERGUARD_PLUGIN_DIR:serverguard/plugins}
+
   minecraft:
     service-name: minecraft           # 系统服务名（用于 systemd 管理）
-    process-name: paper-1.21.11.jar   # Java 进程名（用于进程保活检测）
-    jar-file: paper-1.21.11.jar       # 服务端 JAR 文件名
-    working-dir: /opt/minecraft       # 服务端工作目录
+    process-name: ""                  # 留空则按已知核心名自动识别
+    jar-file: ""                      # 服务端 JAR 文件名
+    working-dir: ${SERVERGUARD_WORKING_DIR:}  # 留空则自动寻找
+    auto-inject: true                 # 启动时自动注入 Agent 插件
+    agent-jar-name: serverguard-agent.jar
     java-opts: -Xms4G -Xmx4G          # JVM 启动参数
     check-interval-seconds: 5         # 进程保活检查间隔（秒）
     rcon:
-      enabled: true                   # 是否启用 RCON 通信
-      host: localhost                 # RCON 主机地址
-      port: 25575                     # RCON 端口
-      password: ${RCON_PASSWORD:}     # RCON 密码（环境变量注入）
+      enabled: true
+      host: localhost
+      port: 25575
+      password: ${RCON_PASSWORD:}
+
+  monitor:
+    tps-threshold: 15
+    cpu-threshold: 80.0
+    memory-threshold: 85.0
+    connection-threshold: 50
+    log-watch-lines: 100
+    log-path: ${SERVERGUARD_LOG_PATH:}  # 留空则自动推导
 ```
 
 ### AI 配置（serverguard.ai.*）
 
 ```yaml
   ai:
-    enabled: true                     # 启用 AI 分析
-    use-isolation-forest: true        # 启用隔离森林异常检测
-    use-prediction: true              # 启用时间序列预测
-    sliding-window-size: 100          # 滑动窗口大小（数据点）
-    anomaly-threshold: 0.7            # 异常判定阈值（0-1，越高越不敏感）
-    prediction-horizon-minutes: 60    # 预测时间范围（分钟）
+    enabled: true
+    use-isolation-forest: true        # 隔离森林异常检测
+    use-prediction: true              # 时间序列预测
+    sliding-window-size: 100
+    anomaly-threshold: 0.7
+    prediction-horizon-minutes: 60
     deepseek:
-      enabled: true                   # 启用 DeepSeek AI
-      api-key: ${DEEPSEEK_API_KEY:}   # API 密钥（环境变量）
+      enabled: true
+      api-key: ${DEEPSEEK_API_KEY:}
       base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
       model: ${DEEPSEEK_MODEL:deepseek-chat}
-      max-tokens: 1000                # 单次回复最大 token 数
-      temperature: 0.35               # 分析稳定性（0=精确，1=创造性）
-      auto-analyze-alerts: true       # 自动分析告警（异步 CompletableFuture）
-      analysis-interval-seconds: 45   # 健康报告分析间隔（秒）
-      auto-execute:                   # 自动执行防御动作
-        enabled: true                 # 启用自动执行
-        ban-ip: true                  # 允许自动封禁 IP
-        kill-entity: true             # 允许自动清除实体
-        clear-lag: true               # 允许自动清理延迟
-        set-spawn-rate: true          # 允许自动调整生成率
-        kick-player: true             # 允许自动踢出玩家
-        whitelist: true               # 允许自动启用白名单
+      max-tokens: 1000
+      temperature: 0.35
+      auto-analyze-alerts: true
+      analysis-interval-seconds: 45
+      auto-execute:
+        enabled: true
+        ban-ip: true
+        kill-entity: true
+        clear-lag: true
+        set-spawn-rate: true
+        kick-player: true
+        whitelist: true
         min-confidence: 88            # 自动执行所需最低 AI 置信度（%）
 ```
 
-完整配置文件参考见 `src/main/resources/application.yml`，包含 362 行完整配置及中文注释。
+### 安全策略配置（serverguard.security.*）
+
+```yaml
+  security:
+    enabled: true
+    auto-ban-vpn: true
+    check-on-login: true
+    max-connections-per-ip: 3
+    block-common-exploits: true
+    log-all-commands: true
+    host-enforcement:
+      enabled: true
+      dry-run: true                   # 仅记录不执行
+    self-healing:
+      enabled: true
+      dry-run: true
+      tps-emergency-threshold: 12
+      cpu-emergency-threshold: 92.0
+      memory-emergency-threshold: 95.0
+    kernel:
+      enabled: true
+      pulse-interval-seconds: 30
+    task-bus:
+      enabled: true
+      auto-dispatch: true
+    super-evolution:
+      # 反作弊 / 网络 / 主机 / 聊天 等 100+ 个模块开关
+      anti-kill-aura: true
+      anti-speed: true
+      # ...（完整清单见 application.yml）
+```
+
+完整配置文件参考见 `src/main/resources/application.yml`，包含 326 行完整配置及中文注释。
 
 ---
 
@@ -608,7 +767,7 @@ Agent Plugin 模式提供以下游戏内管理命令：
 | 命令 | 权限 | 说明 |
 |------|------|------|
 | `/aluer status` | `aluer.status` | 查看防护状态：TPS、在线玩家数、包速率、Spring 上下文状态、事件处理统计 |
-| `/aluer scan <玩家名>` | `aluer.admin` | 深度扫描指定玩家：位置/IP/Ping/飞行状态/冲刺/潜行/最近攻击目标数/攻击角度一致性/消息历史/命令历史/在线时长 |
+| `/aluer scan <玩家名>` | `aluer.admin` | 深度扫描指定玩家：位置/IP/Ping/飞行状态/冲刺/潜行/最近攻击目标数/攻击角度一致性 |
 | `/aluer info` | `aluer.status` | 显示系统版本信息：版本号、作者、技术栈、模块数、运行模式 |
 | `/aluerplayers` | `aluer.status` | 查看在线玩家列表，带有风险标记（[多目标] / [瞄准可疑]） |
 | `/aluerblock player <名> [理由]` | `aluer.admin` | 封禁玩家并广播通知全服 |
@@ -626,14 +785,14 @@ Agent Plugin 模式提供以下游戏内管理命令：
 ### 构建命令
 
 ```bash
-# 编译项目（225 源文件）
-./apache-maven-3.9.6/bin/mvn compile
+# 编译项目（clean 全量编译）
+./apache-maven-3.9.6/bin/mvn clean compile
 
-# 运行全量测试（323 项，JUnit 5，无 Spring 上下文）
-./apache-maven-3.9.6/bin/mvn test
+# 运行全量测试（456 项，JUnit 5，无 Spring 上下文）
+./apache-maven-3.9.6/bin/mvn clean test
 
-# 打包（跳过测试，生成 serverguard.jar ~63MB）
-./apache-maven-3.9.6/bin/mvn package -DskipTests
+# 打包（跳过测试，生成 serverguard.jar）
+./apache-maven-3.9.6/bin/mvn clean package -DskipTests
 
 # 清理构建产物
 ./apache-maven-3.9.6/bin/mvn clean
@@ -643,9 +802,9 @@ Agent Plugin 模式提供以下游戏内管理命令：
 
 | 指标 | 数值 |
 |------|------|
-| 测试文件 | 19 个（`V40AntiCheatTest` / `V40PlayerBehaviorTest` / `V40ServerProtectionTest` / `V40AccessControlTest` / `V40ChatSecurityTest` / `V50AntiCheatExtendedTest` / `V50ServerProtectionTest` 等） |
-| 测试用例 | 323 项 |
-| 测试结果 | **323/323 全部通过，0 失败，0 跳过** |
+| 测试文件 | 36 个（`V40AntiCheatTest` / `V40PlayerBehaviorTest` / `V40ServerProtectionTest` / `V40AccessControlTest` / `V40ChatSecurityTest` / `V50AntiCheatExtendedTest` / `V50ServerProtectionTest` / `SuperEvolutionSecurityTest` / `MinecraftProcessDetectorTest` / `PluginManagerTest` 等） |
+| 测试用例 | 456 项 |
+| 测试结果 | **456/456 全部通过，0 失败，0 错误，0 跳过** |
 | 测试框架 | JUnit 5（JUnitPlatformProvider） |
 | 测试模式 | 纯单元测试，无 Spring 上下文（服务使用无参构造函数 + `new ServerGuardConfig()`） |
 
@@ -656,7 +815,7 @@ Agent Plugin 模式提供以下游戏内管理命令：
 - **双构造函数模式**：每个 `@Service` 类同时提供无参构造函数（用于测试）和 `@Autowired` 全参构造函数（用于 Spring 注入），确保测试零依赖
 - **内部静态结果类**：检测结果统一使用内部静态结果类 + 静态工厂方法（`clean()` / `suspicious()` / `blocked()` / `flagged()`），类型安全
 - **生产对齐**：测试数据和阈值与生产环境完全一致，不做简化或 mock
-- **全量验证**：修改代码前后必须跑全量 `mvn test`，任何失败必须立即修复
+- **全量验证**：修改代码前后必须跑全量 `mvn clean test`，任何失败必须立即修复
 
 ---
 
@@ -665,9 +824,11 @@ Agent Plugin 模式提供以下游戏内管理命令：
 | 技术 | 版本 | 用途 |
 |------|------|------|
 | Java | 21 | 核心编程语言 |
-| Spring Boot | 3.2.0 | 应用框架（Web · WebSocket · Mail · Shell · Configuration Processor） |
+| Spring Boot | 3.2.0 | 应用框架（Web · WebSocket · Mail · Shell · Actuator · Configuration Processor） |
 | Maven | 3.9.6（bundled） | 构建管理 |
-| PaperMC API | 1.21.1-R0.1-SNAPSHOT（provided） | Minecraft 服务端集成 |
+| PaperMC API | 1.21.1-R0.1-SNAPSHOT（provided） | Minecraft 服务端集成（编译目标） |
+| PacketEvents | 2.7.0（provided） | 数据包级反作弊（运行时由 PacketEvents 插件提供） |
+| JetBrains Annotations | 24.0.0（provided） | Grim 引擎代码编译期注解 |
 | Spring WebSocket | 3.2.0 | Agent ↔ ServerGuard 双向通信 |
 | Spring Mail | 3.2.0 | 邮件告警通知 |
 | Spring Shell | 3.1.3 | CLI 命令行交互 |
@@ -676,7 +837,7 @@ Agent Plugin 模式提供以下游戏内管理命令：
 | SnakeYAML | 2.2 | YAML 配置文件解析 |
 | JSch | 0.2.20 | SSH 远程网关 |
 | Lombok | 1.18.38（optional） | 代码简化 |
-| React | 19.1.0 | Web 控制台前端 |
+| React | 19.1.0 | Web 控制台前端（Nebula Console） |
 | Vite | 6.3.5 | 前端构建 |
 | DeepSeek API | /v1/chat/completions | AI 大模型决策 |
 
@@ -687,6 +848,9 @@ Agent Plugin 模式提供以下游戏内管理命令：
 | 变量 | 说明 | 默认值 | 必须 |
 |------|------|--------|------|
 | `SERVERGUARD_MODE` | 运行模式：`plugin` 或 `external` | `external` | 否 |
+| `SERVERGUARD_WORKING_DIR` | 服务端工作目录（留空自动寻找） | (空) | 否 |
+| `SERVERGUARD_LOG_PATH` | 日志文件路径（留空自动推导） | (空) | 否 |
+| `SERVERGUARD_PLUGIN_DIR` | 插件目录 | `serverguard/plugins` | 否 |
 | `DEEPSEEK_API_KEY` | DeepSeek AI 接口密钥 | (空，AI 自动禁用) | 否 |
 | `DEEPSEEK_BASE_URL` | DeepSeek API 地址 | `https://api.deepseek.com` | 否 |
 | `DEEPSEEK_MODEL` | DeepSeek 模型名称 | `deepseek-chat` | 否 |
@@ -696,114 +860,77 @@ Agent Plugin 模式提供以下游戏内管理命令：
 | `ALUER_ALERT_SMTP_PASSWORD` | 告警邮件 SMTP 发件密码 | (空) | 邮件告警须 |
 | `ALUER_ALERT_EMAIL_PRIMARY` | 主告警接收邮箱 | (空) | 邮件告警须 |
 | `ALUER_ALERT_EMAIL_SECONDARY` | 备用告警接收邮箱 | (空) | 否 |
-| `ALUER_CLOUDFLARE_ZONE_ID` | Cloudflare Zone ID（边缘防御） | (空) | Cloudflare须 |
-| `ALUER_CLOUDFLARE_API_KEY` | Cloudflare API Key | (空) | Cloudflare须 |
-| `ALUER_CLOUDFLARE_EMAIL` | Cloudflare 账户邮箱 | (空) | Cloudflare须 |
+| `ALUER_CLOUDFLARE_ZONE_ID` | Cloudflare Zone ID（边缘防御） | (空) | Cloudflare 须 |
+| `ALUER_CLOUDFLARE_API_KEY` | Cloudflare API Key | (空) | Cloudflare 须 |
+| `ALUER_CLOUDFLARE_EMAIL` | Cloudflare 账户邮箱 | (空) | Cloudflare 须 |
+| `ALUER_WEBHOOK_DISCORD` | Discord Webhook 通知地址 | (空) | 否 |
+| `ALUER_WEBHOOK_SLACK` | Slack Webhook 通知地址 | (空) | 否 |
 
 ---
 
 ## 项目结构
 
 ```
-AluerIII/
-├── pom.xml                                    # Maven 构建配置（Java 21, Paper API, WebSocket）
-├── plugin.yml                                 # Paper 插件描述文件
-├── LICENSE                                     # Apache 2.0 许可证
+Aluer/
+├── pom.xml                                    # Maven 构建配置（Java 21, Paper API, PacketEvents, GPL-3.0）
+├── LICENSE                                     # GPL-3.0 许可证
 ├── CLAUDE.md                                  # AI 开发规范（并行Agent/打靶试验/零伪代码等）
 ├── README.md                                  # 项目说明文档（中文·本文件）
 ├── README_EN.md                               # 项目说明文档（英文）
 ├── logo.png                                   # 项目 Logo
 ├── docs/
-│   ├── DEVELOPER.md                           # 开发者参考手册（1022 行）
-│   ├── PROJECT_SUMMARY.md                     # 项目总览与模块拆解（425 行）
-│   └── USER_MANUAL.md                         # 用户安装与运维手册（607 行）
+│   ├── DEVELOPER.md                           # 开发者参考手册
+│   ├── PROJECT_SUMMARY.md                     # 项目总览与模块拆解
+│   ├── USER_MANUAL.md                         # 用户安装与运维手册
+│   ├── 开源反作弊融合.md                        # Grim/NCP 融合说明与许可证合规
+│   └── 插件系统与多平台支持.md                   # 插件系统与多平台/多版本支持说明
 ├── apache-maven-3.9.6/                        # 捆绑的 Maven 3.9.6
 ├── src/
 │   ├── main/java/com/aluer/
 │   │   ├── ServerGuardApplication.java        # Spring Boot 主入口
-│   │   ├── agent/AgentMessage.java            # Agent ↔ Server 通信协议定义（10 种消息 + 10 种命令）
+│   │   ├── agent/AgentMessage.java            # Agent ↔ Server 通信协议定义
 │   │   ├── config/
-│   │   │   ├── ServerGuardConfig.java         # 完整配置类（1273 行，27 个内部配置类，85+ 属性）
+│   │   │   ├── ServerGuardConfig.java         # 完整配置类（30+ 内部配置类）
 │   │   │   ├── CorsConfig.java                # CORS 跨域配置
-│   │   │   └── WebSocketConfig.java           # WebSocket 端点配置（/agent）
-│   │   ├── model/
-│   │   │   ├── AlertEvent.java                # 告警事件模型（支持 epoch millis 时间戳）
-│   │   │   ├── AlertType.java                 # 告警类型枚举（75 种告警类型）
-│   │   │   └── MetricsData.java               # 指标数据模型
-│   │   ├── security/                          # 安全模块核心（151 个文件，53,763 行）
-│   │   │   ├── AntiKillAuraService.java       # 反作弊模块（16 战斗 + 19 移动 + 13 世界 + 9 杂物）
-│   │   │   ├── DDoSProtectionService.java     # DDoS 防御模块
-│   │   │   ├── ProtocolStateValidator.java    # 网络协议安全模块
-│   │   │   ├── ChunkLoadRateLimiter.java      # 服务器性能保护模块
-│   │   │   ├── ChatFloodProtectionService.java # 聊天安全模块
-│   │   │   ├── WebApplicationFirewall.java    # WAF 防火墙
-│   │   │   ├── ... (145+ 更多模块)
-│   │   │   └── ZeroTrustArchitectureService.java
-│   │   ├── ml/                                # ML 行为分析引擎（4 个文件，2,358 行）
-│   │   │   ├── BehavioralProfilingEngine.java # 5 维特征 · Shannon 熵 · Z-score · 6 类画像
-│   │   │   ├── CombatPatternRecognizer.java   # CPS 方差 · 多目标熵 · 扫视分析
-│   │   │   ├── MovementPatternAnalyzer.java   # FFT 频谱 · 旋转平滑度 · 宏匹配
-│   │   │   └── ThreatScoreAggregator.java     # 指数衰减 · 4 级上报 · Top-N 排名
-│   │   ├── ai/                                # AI 集成（8 个文件，2,072 行）
-│   │   │   ├── DeepSeekClient.java            # DeepSeek API 客户端
-│   │   │   ├── AIAutonomousService.java       # AI 自治防御服务
-│   │   │   ├── AIStrategyEngine.java          # AI 策略引擎
-│   │   │   ├── AluerSovereignEngine.java      # 主权 AI 引擎
-│   │   │   ├── AnomalyDetector.java           # 隔离森林异常检测
-│   │   │   ├── TimeSeriesPredictor.java       # 时间序列预测
-│   │   │   ├── AdaptiveThreshold.java         # 自适应阈值
-│   │   │   └── AttackDetector.java            # 攻击模式检测
-│   │   ├── kernel/                            # Kernel 自治引擎（3 个文件，1,531 行）
-│   │   │   ├── AluerKernelEngine.java         # 5 模块信号聚合 → 热/共振/控制 → 8 工作流
-│   │   │   ├── AluerKernelTaskBus.java        # 内核任务总线
-│   │   │   └── AluerSelfHealingOrchestrator.java # 服务器自愈编排器
-│   │   ├── plugin/                            # Paper Agent 插件（14 个文件，1,965 行）
+│   │   │   ├── WebSocketConfig.java           # WebSocket 端点配置（/agent）
+│   │   │   └── ShellPromptProvider.java       # Shell 提示符
+│   │   ├── model/                             # 告警事件/告警类型/指标数据模型
+│   │   ├── anticheat/                         # 反作弊模块（64 个）
+│   │   │   ├── combat/                        # 战斗类（20）
+│   │   │   ├── movement/                      # 移动类（21）
+│   │   │   ├── world/                         # 世界类（14）
+│   │   │   └── player/                        # 玩家类（9）
+│   │   ├── defense/                           # 纵深防御与主机安全（58 个）
+│   │   ├── network/                           # 网络安全（28 个）
+│   │   ├── server/                            # 服务器漏洞防护（7 个）
+│   │   ├── chat/                              # 聊天与社交安全（6 个）
+│   │   ├── ml/                                # ML 行为分析引擎（4 个）
+│   │   ├── ai/                                # AI 集成（8 个）
+│   │   ├── kernel/                            # Kernel 自治引擎（3 个）
+│   │   ├── plugin/                            # Paper Agent 插件
 │   │   │   ├── AluerPlugin.java               # JavaPlugin 主入口
-│   │   │   ├── AluerCommandExecutor.java      # /aluer 等 7 个命令注册
-│   │   │   ├── bridge/
-│   │   │   │   ├── AgentWebSocketClient.java  # WebSocket 客户端（断线重连/心跳）
-│   │   │   │   ├── DataBridge.java            # 数据桥接（PlayerSnapshot/事件计数/TPS）
-│   │   │   │   └── InternalCommandExecutor.java # Bukkit API 命令执行器
+│   │   │   ├── AluerCommandExecutor.java      # /aluer 等命令注册
+│   │   │   ├── bridge/                        # WebSocket 客户端/数据桥/命令执行器
 │   │   │   └── listener/                      # 9 个 Bukkit 事件监听器
-│   │   │       ├── PlayerEventListener.java   # 加入/退出/移动/传送/摔伤
-│   │   │       ├── CombatEventListener.java   # 攻击/死亡
-│   │   │       ├── ChatEventListener.java     # 聊天
-│   │   │       ├── CommandEventListener.java  # 命令
-│   │   │       ├── BlockEventListener.java    # 方块破坏/放置/告示牌
-│   │   │       ├── InventoryEventListener.java # 背包/容器
-│   │   │       ├── EntityEventListener.java   # 实体生成/钓鱼/拾取
-│   │   │       ├── WorldEventListener.java    # 区块加载/卸载
-│   │   │       └── PacketEventListener.java   # 网络包（Paper 特定）
-│   │   ├── server/AgentWebSocketServer.java   # WebSocket 服务端（接收 Agent 连接）
-│   │   ├── service/                           # 核心服务（5 个文件，1,534 行）
-│   │   │   ├── ServerGuardService.java        # 主调度服务（监控循环/告警管道）
-│   │   │   ├── AutoExecutor.java              # 自动防御执行（RCON 通道）
-│   │   │   ├── AgentCommandDispatcher.java    # Agent 命令调度（WebSocket 通道）
-│   │   │   ├── RconClient.java                # RCON 客户端
-│   │   │   └── TestService.java               # 测试服务
-│   │   ├── web/                               # Web 层（5 个文件，1,217 行）
-│   │   │   ├── DashboardController.java       # REST API 仪表盘
-│   │   │   ├── OperationsConsoleController.java # 运维控制台 API
-│   │   │   ├── ConsoleStreamController.java   # SSE 流式推送
-│   │   │   ├── HealthService.java             # 健康检查
-│   │   │   └── RequestLoggingFilter.java      # 请求日志过滤器
-│   │   ├── monitor/                           # 系统监控（4 个文件）
-│   │   ├── console/                           # 运维中心（4 个文件）
-│   │   ├── command/                           # Spring Shell 命令（2 个文件）
-│   │   └── ... (15 个辅助包)
+│   │   ├── pluginsystem/                      # ServerGuard 插件系统（10 个）
+│   │   ├── platform/                          # 平台抽象层（6 个）
+│   │   ├── deploy/AgentDeployService.java     # Agent 自动注入服务
+│   │   ├── monitor/                           # 进程定位/资源监控（6 个）
+│   │   ├── console/                           # 运维中心（4 个）
+│   │   ├── service/                           # 核心服务（主调度/自动执行/命令调度/RCON）
+│   │   ├── web/                               # Web 层（仪表盘/运维控制台/SSE/健康检查）
+│   │   ├── command/                           # Spring Shell 命令
+│   │   └── ...（其余辅助包：backup/export/metrics/notification/punishment 等）
 │   └── main/resources/
-│       ├── application.yml                    # 默认配置文件（362 行）
-│       └── plugin.yml                         # Paper 插件描述
-├── src/test/java/com/aluer/                   # 测试代码（19 个文件，6,035 行）
-│   ├── security/
-│   │   ├── SuperEvolutionSecurityTest.java    # 52 项测试
-│   │   ├── V40AntiCheatTest.java              # 33 项测试
-│   │   ├── V50AntiCheatExtendedTest.java      # 20 项测试（V5.0 新增）
-│   │   ├── V50ServerProtectionTest.java       # 25 项测试（V5.0 新增）
-│   │   └── ... (13 个更多测试文件)
-│   ├── kernel/                                # Kernel 引擎测试
-│   └── console/                               # 运维中心测试
-└── frontend/                                  # React 前端
+│       ├── application.yml                    # 默认配置文件（326 行）
+│       ├── banner.txt                         # Spring Boot 启动 Banner
+│       ├── config.yml                         # Agent 插件默认配置
+│       ├── plugin.yml                         # Paper 插件描述
+│       ├── logback.xml                        # 日志配置
+│       └── static/                            # Web 控制台静态资源（Nebula Console）
+├── src/main/java/ac/grim/grimac/utils/math/   # Grim 移动模拟引擎移植（math 库）
+├── src/test/java/com/aluer/                   # 测试代码（36 个文件，456 项测试）
+└── frontend/                                  # React 前端源码（Nebula Console）
     ├── src/ (App.jsx + main.jsx + styles.css)
     └── package.json (React 19 + Vite 6)
 ```
@@ -817,7 +944,7 @@ AluerIII/
 | 通信延迟 | < 1ms（本地 WebSocket） | 50-200ms（RCON 往返） |
 | 单 Agent 事件吞吐 | 50,000+ 事件/秒 | — |
 | 在线玩家支持 | 100+（单 Agent） | 无直接限制 |
-| Agent 内存占用 | ~50MB（插件部分） | 0 |
+| Agent 内存占用 | 几十 MB（插件部分） | 0 |
 | ServerGuard 内存占用 | ~200MB（含 JVM） | ~200MB（含 JVM） |
 | Agent CPU 占用 | < 5%（100 人在线） | 0 |
 | ServerGuard CPU 占用 | < 10%（中等负载） | < 5%（仅 RCON 轮询） |
@@ -837,7 +964,7 @@ AluerIII/
 - 毫秒级即时拦截（`event.setCancelled(true)` 在事件处理中直接阻止作弊行为）
 - Bukkit 事件级数据精度（精确到每个 tick 的玩家移动、攻击、物品使用）
 - 50,000+ 事件/秒吞吐量
-- 全部 135+ 模块的完整检测能力
+- 全部 170+ 模块的完整检测能力
 
 External 模式适合不想安装插件的临时评测或已有其他反作弊插件的场景。
 </details>
@@ -847,7 +974,7 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 
 不是必须的。未配置 `DEEPSEEK_API_KEY` 环境变量时，AI 功能自动禁用，系统退化为：
 
-- **规则引擎模式**：所有 135+ 模块基于固定阈值检测
+- **规则引擎模式**：所有 170+ 模块基于固定阈值检测
 - **ML 模式**：隔离森林异常检测 + 时间序列预测 + 香农熵行为画像均无需 AI
 - **自动防御降级**：AutoExecutor 不会自动执行（因为没有 AI 的 `autoAction` 字段），但管理员仍可手动 `/aluerblock`
 
@@ -857,9 +984,10 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 <details>
 <summary><b>Q3: 支持哪些 Minecraft 版本和核心类型？</b></summary>
 
-- **当前支持**：PaperMC 1.21.1
-- **理论上可适配**：Paper 1.20.5+（需要 Java 21） / Paper 1.20.4 及以下需降级 Java 17 并调整 API
-- **不支持**：Spigot/CraftBukkit（缺少 Paper 特定 API）/ Forge / Fabric / Bedrock 版
+- **完整支持（Agent 模式）**：Bukkit 系全部平台——Vanilla(CraftBukkit) / Spigot / Paper / Purpur / Pufferfish / Folia / Glowstone，Minecraft **1.12.2 至今**全部版本
+- **编译目标**：PaperMC 1.21.1（`api-version: '1.12'` + `folia-supported: true` + 反射兼容层实现跨版本）
+- **需独立适配器**：BungeeCord / Waterfall / Velocity（代理端）、Forge / NeoForge / Fabric / Sponge（模组加载器），引擎已具备类型识别能力
+- **不支持**：Bedrock 版
 </details>
 
 <details>
@@ -867,14 +995,14 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 
 1. 在 Minecraft 游戏内执行 `/aluer status`——应显示 TPS、在线玩家数、Agent 连接状态
 2. 查看 ServerGuard 引擎日志——应有 "Agent xxx connected" 消息
-3. 查看 Paper 控制台——Agent 插件启动时应输出加载日志
+3. 查看服务器控制台——Agent 插件启动时应输出加载日志，并回显发往引擎的消息摘要
 4. Web 控制台 http://localhost:8080/——可看到系统状态面板
 </details>
 
 <details>
 <summary><b>Q5: 可以同时运行多个 Agent 吗？</b></summary>
 
-可以。`AgentWebSocketServer` 支持多 Agent 同时连接（每个 Paper 服务器一个 Agent）。不同 Paper 服务器的 Agent 通过不同的 `agentId` 区分，`broadcastCommand()` 可向所有已连接 Agent 广播指令。适用于 BungeeCord/Velocity 群组服多子服场景。
+可以。`AgentWebSocketServer` 支持多 Agent 同时连接（每个服务器一个 Agent）。不同服务器的 Agent 通过不同的 `agentId` 区分，`broadcastCommand()` 可向所有已连接 Agent 广播指令。适用于 BungeeCord/Velocity 群组服多子服场景。
 </details>
 
 <details>
@@ -894,7 +1022,7 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 <summary><b>Q7: 性能优化建议？</b></summary>
 
 - 大型服务器（50+ 人）：提高 `check-interval-seconds` 到 10，降低 AI `analysis-interval-seconds` 到 120
-- 内存受限：关闭部分不需要的 SuperEvolution 模块开关
+- 内存受限：关闭部分不需要的 `super-evolution` 模块开关
 - External 模式：减小 `log-watch-lines` 降低日志解析开销
 - 关闭非必要的 `auto-execute` 子项（如 `whitelist` 在大服务器可能导致误操作）
 </details>
@@ -904,12 +1032,12 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 
 参见 `docs/DEVELOPER.md`，完整流程包括 7 个步骤：
 
-1. 在 `security/` 下创建新 Service 类（遵循双构造函数 + 内部静态结果类模式）
+1. 在 `anticheat/` 对应子包下创建新 Service 类（遵循双构造函数 + 内部静态结果类模式）
 2. 在 `AlertType.java` 中添加告警类型枚举
 3. 在 `ServerGuardConfig.java` 的 `SuperEvolutionConfig` 中添加 `boolean` 开关 + getter/setter
 4. 在 `application.yml` 的 `super-evolution` 节中添加配置项
 5. 编写 JUnit 测试（模拟真实数据，打靶试验）
-6. 运行 `mvn test` 验证全量通过
+6. 运行 `mvn clean test` 验证全量通过
 7. Git commit（中文 commit message）
 </details>
 
@@ -917,13 +1045,19 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 <summary><b>Q9: 如何在 IDE 中调试？</b></summary>
 
 1. 在 `ServerGuardApplication.main()` 中设断点启动 External 模式
-2. 或启动 Paper 服务器（Agent 自动加载），在 `AluerPlugin.onEnable()` 设断点远程调试
+2. 或启动 Minecraft 服务器（Agent 自动加载），在 `AluerPlugin.onEnable()` 设断点远程调试
 3. 测试直接运行 JUnit——无需 Spring 上下文，无需 Paper 环境，纯 Java 单元测试
 4. 所有 `.idea/` 配置已纳入 Git，IntelliJ IDEA 直接开箱即用
 </details>
 
 <details>
-<summary><b>Q10: 项目技术规范是什么？</b></summary>
+<summary><b>Q10: 如何开发 ServerGuard 第三方插件？</b></summary>
+
+实现 `ServerGuardPlugin` 接口并用 `@Plugin` 注解声明元数据，打包 JAR 放入 `serverguard/plugins/` 目录即可自动加载。详见 [插件系统](#插件系统) 章节与 `docs/插件系统与多平台支持.md`。
+</details>
+
+<details>
+<summary><b>Q11: 项目技术规范是什么？</b></summary>
 
 详见 `CLAUDE.md`：YOLO 模式（直接执行不等确认）、中文注释（解释 WHY 非 WHAT）、打靶试验（真实 Minecraft 数据）、零伪代码（每行可运行可验证）、频繁提交（中文 commit message）、并行 Agent 开发。
 </details>
@@ -934,35 +1068,36 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 
 | 贡献者 | GitHub | 角色 |
 |--------|--------|------|
-| Peijun Zhao | [@ZpjDev](https://github.com/ZpjDev) | 架构设计、核心开发、全部 135+ 安全模块实现 |
+| Peijun Zhao | [@ZpjDev](https://github.com/ZpjDev) | 架构设计、核心开发、全部安全模块实现 |
 
 ---
 
 ## 许可证
 
-本项目基于 **Apache License 2.0** 开源。
+本项目基于 **GNU General Public License v3.0（GPL-3.0）** 开源。
 
 ```
-Copyright 2026 Peijun Zhao
+Aluer ServerGuard — AI-powered Minecraft multi-platform Server Protection System
+Copyright (C) 2026 Peijun Zhao
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 ```
 
 完整许可证文本见 [LICENSE](LICENSE)。
 
+> 说明：本项目融合了 GrimAC、NoCheatPlus 等 GPL 开源反作弊的检测算法，因此采用 GPL-3.0 许可证以保证许可证兼容。详见 `docs/开源反作弊融合.md`。
+
 <p align="center">
   <br>
   <b>Aluer ServerGuard V5.0</b><br>
-  <sub>AI-Powered Minecraft PaperMC Server Protection</sub><br>
+  <sub>AI-Powered Minecraft Multi-Platform Server Protection</sub><br>
   <sub>保护每一台 Minecraft 服务器</sub>
 </p>

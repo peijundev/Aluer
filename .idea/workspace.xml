@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f77d5d62-63da-4fce-bc89-0b1a8c0babde" name="更改" comment="修复IDE">
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ServerGuard__8080_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/ServerGuard__8080_.xml" afterDir="false" />
+    <list default="true" id="f77d5d62-63da-4fce-bc89-0b1a8c0babde" name="更改" comment="修复">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvn" beforeDir="false" afterPath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvn" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvnDebug" beforeDir="false" afterPath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvnDebug" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/banner.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/banner.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,43 +40,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "CidrDebugProfileConversion": "true",
-    "JAR 应用程序.serverguard.jar.executor": "Debug",
-    "Maven.Maven Clean Compile.executor": "Run",
-    "Maven.Maven Package.executor": "Run",
-    "Maven.serverguard [clean,compile].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "SHELLCHECK.PATH": "/home/zpjdev/.local/share/JetBrains/IntelliJIdea2026.2/Shell Script/shellcheck",
-    "Spring Boot.ServerGuard (8080).executor": "Run",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "项目",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "com.intellij.mcpserver.settings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;CidrDebugProfileConversion&quot;: &quot;true&quot;,
+    &quot;JAR 应用程序.serverguard.jar.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.Maven Clean Compile.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Maven Package.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.serverguard [clean,compile].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/home/zpjdev/.local/share/JetBrains/IntelliJIdea2026.2/Shell Script/shellcheck&quot;,
+    &quot;Spring Boot.ServerGuard (8080).executor&quot;: &quot;Run&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.mcpserver.settings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="JAR 应用程序.serverguard.jar">
+}</component>
+  <component name="RunManager" selected="Maven.Maven Clean Compile">
     <configuration name="All Tests (323)" type="JUnit" factoryName="JUnit">
       <module name="serverguard" />
       <option name="TEST_OBJECT" value="pattern" />
@@ -283,7 +278,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="修复进程识别bug：改用ProcessHandle API检测Minecraft服务器进程&#10;&#10;根因：application.yml 中 process-name 配置为 paper-1.21.11.jar，&#10;而实际运行的 jar 为 paper-1.21.11-113.jar（带 build 号），&#10;pgrep -f 把关键词当正则处理且无法命中带 build 号的文件名，导致识别不到进程。&#10;&#10;修复：&#10;- 新增 MinecraftProcessDetector 工具类，采用 JDK 原生 ProcessHandle API&#10;  遍历系统进程，子串匹配命令行中的 processName/jarFile 关键词，&#10;  并排除 Aluer 自身 JVM 进程，避免自匹配误判。&#10;- ProcessMonitor.isProcessRunning 与 ResourceMonitor.findJavaProcess&#10;  改用该检测器，替代脆弱的 pgrep -f。&#10;- process-name 改为 paper-1.21.11（去除 .jar 后缀），兼容 build 号变化。&#10;- 同步 ServerGuardConfig 默认 processName 与 yml 一致。" />
     <MESSAGE value="修复IDE" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复IDE" />
+    <MESSAGE value="修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
