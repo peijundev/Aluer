@@ -1,12 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ServerGuard (8080)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ALTERNATIVE_JRE_PATH" value="ms-21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <module name="serverguard" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.aluer.ServerGuardApplication" />
     <option name="VM_PARAMETERS" value="-Dserverguard.mode=external" />
-    <option name="PROGRAM_PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="ALTERNATIVE_JRE_PATH" value="26" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.aluer.*" />

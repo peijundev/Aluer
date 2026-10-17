@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f77d5d62-63da-4fce-bc89-0b1a8c0babde" name="更改" comment="修复IDE">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ServerGuard__8080_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/ServerGuard__8080_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvn" beforeDir="false" afterPath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvnDebug" beforeDir="false" afterPath="$PROJECT_DIR$/apache-maven-3.9.6/bin/mvnDebug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/banner.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/banner.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,10 +32,10 @@
     &quot;accountId&quot;: &quot;2f77546d-1fe1-49c3-bbd4-023ce7ce19af&quot;
   }
 }</component>
-  <component name="KmpPackageLockUpdaterState"><![CDATA[{
-  "jsModulesKotlinGradlePluginVersion": {},
-  "wasmModulesKotlinGradlePluginVersion": {}
-}]]></component>
+  <component name="KmpPackageLockUpdaterState">{
+  &quot;jsModulesKotlinGradlePluginVersion&quot;: {},
+  &quot;wasmModulesKotlinGradlePluginVersion&quot;: {}
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 1
@@ -45,7 +48,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "CidrDebugProfileConversion": "true",
-    "JAR 应用程序.serverguard.jar.executor": "Run",
+    "JAR 应用程序.serverguard.jar.executor": "Debug",
     "Maven.Maven Clean Compile.executor": "Run",
     "Maven.Maven Package.executor": "Run",
     "Maven.serverguard [clean,compile].executor": "Run",
@@ -74,7 +77,7 @@
     "project.structure.last.edited": "项目",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.remoteExternalTools",
+    "settings.editor.selected.configurable": "com.intellij.mcpserver.settings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -198,6 +201,15 @@
         <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean compile" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="JAR 应用程序.serverguard.jar" />
+      <item itemvalue="JUnit.All Tests (323)" />
+      <item itemvalue="JUnit.All Tests" />
+      <item itemvalue="Maven.Maven Clean Compile" />
+      <item itemvalue="Maven.Maven Package" />
+      <item itemvalue="Maven.Maven Test" />
+      <item itemvalue="Spring Boot.ServerGuard (8080)" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JAR 应用程序.serverguard.jar" />
@@ -269,6 +281,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="修复进程识别bug：改用ProcessHandle API检测Minecraft服务器进程&#10;&#10;根因：application.yml 中 process-name 配置为 paper-1.21.11.jar，&#10;而实际运行的 jar 为 paper-1.21.11-113.jar（带 build 号），&#10;pgrep -f 把关键词当正则处理且无法命中带 build 号的文件名，导致识别不到进程。&#10;&#10;修复：&#10;- 新增 MinecraftProcessDetector 工具类，采用 JDK 原生 ProcessHandle API&#10;  遍历系统进程，子串匹配命令行中的 processName/jarFile 关键词，&#10;  并排除 Aluer 自身 JVM 进程，避免自匹配误判。&#10;- ProcessMonitor.isProcessRunning 与 ResourceMonitor.findJavaProcess&#10;  改用该检测器，替代脆弱的 pgrep -f。&#10;- process-name 改为 paper-1.21.11（去除 .jar 后缀），兼容 build 号变化。&#10;- 同步 ServerGuardConfig 默认 processName 与 yml 一致。" />
     <MESSAGE value="修复IDE" />
     <option name="LAST_COMMIT_MESSAGE" value="修复IDE" />
   </component>
