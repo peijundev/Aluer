@@ -65,8 +65,14 @@ public class AluerPlugin extends JavaPlugin {
         // 探测运行平台与版本（跨 Spigot/Paper/Purpur/Folia 及 1.12.2+ 全版本）
         platform = PlatformDetector.detect();
 
-        // 读取配置
-        saveDefaultConfig();
+        // 读取配置。
+        // saveDefaultConfig() 在 JAR 内缺失 config.yml 时会抛 IllegalArgumentException，
+        // 这里容错处理：缺资源时保持默认 server-url，避免整个插件因配置缺失而启用失败。
+        try {
+            saveDefaultConfig();
+        } catch (IllegalArgumentException e) {
+            logger.debug("插件 JAR 内未找到 config.yml，使用默认 server-url");
+        }
         serverUrl = getConfig().getString("server-url", "ws://localhost:8080/agent");
 
         // 初始化内部命令执行器

@@ -29,6 +29,8 @@ class AgentDeployServiceTest {
 
             // 插件描述文件
             assertTrue(entries.contains("plugin.yml"), "应包含 plugin.yml");
+            // 插件默认配置（saveDefaultConfig 依赖该资源）
+            assertTrue(entries.contains("config.yml"), "应包含 config.yml");
             // Agent 入口与核心类
             assertTrue(entries.contains("com/aluer/plugin/AluerPlugin.class"));
             assertTrue(entries.contains("com/aluer/plugin/bridge/AgentWebSocketClient.class"));

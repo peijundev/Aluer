@@ -1,0 +1,7 @@
+# Aluer ServerGuard Agent 插件默认配置
+# 首次加载时 saveDefaultConfig() 会将其复制到游戏服务器 plugins/AluerServerGuard/config.yml，
+# 之后可编辑该文件覆盖默认值，无需重新打包 Agent JAR。
+
+# 外部 ServerGuard 引擎的 WebSocket 地址。
+# 引擎与游戏服务器同机部署时保持默认即可；跨主机部署时改为 ws://<引擎IP>:8080/agent
+server-url: ws://localhost:8080/agent

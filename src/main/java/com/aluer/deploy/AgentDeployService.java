@@ -43,6 +43,9 @@ public class AgentDeployService {
     /** Agent 插件描述文件 */
     private static final String PLUGIN_YML = "plugin.yml";
 
+    /** Agent 插件默认配置文件（server-url 等运行时参数） */
+    private static final String CONFIG_YML = "config.yml";
+
     /** Agent 最小依赖闭包：需要打包进插件 JAR 的类路径模式 */
     private static final String[] AGENT_CLASS_PATTERNS = {
             "classpath*:com/aluer/plugin/**/*.class",
@@ -151,6 +154,14 @@ public class AgentDeployService {
             if (pluginYml != null) {
                 jos.putNextEntry(new JarEntry(PLUGIN_YML));
                 jos.write(pluginYml);
+                jos.closeEntry();
+            }
+            // 插件默认配置：AluerPlugin.onEnable 调用 saveDefaultConfig() 需从 JAR 读取 config.yml，
+            // 缺该资源会抛 IllegalArgumentException 导致插件启用失败，故必须随 JAR 一并打包。
+            byte[] configYml = readClasspathResource(CONFIG_YML);
+            if (configYml != null) {
+                jos.putNextEntry(new JarEntry(CONFIG_YML));
+                jos.write(configYml);
                 jos.closeEntry();
             }
             // 类文件
