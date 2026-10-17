@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="serverguard">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/target/serverguard.jar!/" />
+      <root url="jar://$PROJECT_DIR$/target/serverguard.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
