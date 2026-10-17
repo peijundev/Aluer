@@ -150,7 +150,6 @@ public class ResourceMonitor {
 
     private int countConnections() {
         try {
-            String logPath = config.getMonitor().getLogPath();
             ProcessBuilder pb = new ProcessBuilder("ss", "-tn");
             pb.redirectErrorStream(true);
             Process p = pb.start();

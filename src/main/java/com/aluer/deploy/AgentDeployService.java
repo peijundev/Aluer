@@ -1,6 +1,7 @@
 package com.aluer.deploy;
 
 import com.aluer.config.ServerGuardConfig;
+import com.aluer.monitor.ServerDirectoryResolver;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class AgentDeployService {
     };
 
     private final ServerGuardConfig config;
+    private final ServerDirectoryResolver directoryResolver;
 
     /** 无参构造（测试兼容） */
     public AgentDeployService() {
@@ -58,8 +60,14 @@ public class AgentDeployService {
     }
 
     @Autowired
-    public AgentDeployService(ServerGuardConfig config) {
+    public AgentDeployService(ServerGuardConfig config, ServerDirectoryResolver directoryResolver) {
         this.config = config;
+        this.directoryResolver = directoryResolver;
+    }
+
+    /** 仅注入配置的构造（测试兼容）：使用独立的目录解析器 */
+    public AgentDeployService(ServerGuardConfig config) {
+        this(config, new ServerDirectoryResolver(config));
     }
 
     /**
@@ -84,11 +92,17 @@ public class AgentDeployService {
 
     /**
      * 按当前配置注入 Agent 插件到 Minecraft 服务端 plugins 目录。
+     *
+     * <p>服务端工作目录通过 {@link ServerDirectoryResolver} 自动寻找：
+     * 显式配置优先，否则回退到进程定位器发现的真实目录，避免写死路径。</p>
      */
     public DeployResult deploy() {
-        String workingDir = config.getMinecraft().getWorkingDir();
+        Path workingDir = directoryResolver.resolveWorkingDir();
         String jarName = config.getMinecraft().getAgentJarName();
-        return deployTo(Path.of(workingDir), jarName);
+        if (workingDir == null) {
+            return DeployResult.failure("无法定位服务端工作目录（进程未运行且未配置 working-dir）");
+        }
+        return deployTo(workingDir, jarName);
     }
 
     /**

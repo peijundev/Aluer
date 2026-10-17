@@ -5,10 +5,12 @@ import com.aluer.model.AlertEvent;
 import com.aluer.model.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -19,8 +21,9 @@ public class LogMonitor {
     private static final Logger logger = LoggerFactory.getLogger(LogMonitor.class);
     
     private final ServerGuardConfig config;
+    private final ServerDirectoryResolver directoryResolver;
     private long lastReadPosition = 0;
-    
+
     private static final Pattern LOGIN_FAILED_PATTERN = Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.\\d+).*Login failed", Pattern.CASE_INSENSITIVE);
     private static final Pattern ATTACK_PATTERNS[] = {
         Pattern.compile("(?i).*invalid packet.*"),
@@ -35,14 +38,31 @@ public class LogMonitor {
     private final Map<String, Integer> failedLoginCounts = new ConcurrentHashMap<>();
     private final Map<String, Long> lastFailedLogin = new ConcurrentHashMap<>();
 
-    public LogMonitor(ServerGuardConfig config) {
+    /** 无参构造（测试兼容） */
+    public LogMonitor() {
+        this(new ServerGuardConfig());
+    }
+
+    @Autowired
+    public LogMonitor(ServerGuardConfig config, ServerDirectoryResolver directoryResolver) {
         this.config = config;
+        this.directoryResolver = directoryResolver;
+    }
+
+    /** 仅注入配置的构造（测试兼容）：使用独立的目录解析器 */
+    public LogMonitor(ServerGuardConfig config) {
+        this(config, new ServerDirectoryResolver(config));
     }
 
     public List<String> watchLogs() {
         List<String> newLines = new ArrayList<>();
-        String logPath = config.getMonitor().getLogPath();
-        
+        Path resolvedLog = directoryResolver.resolveLogPath();
+        if (resolvedLog == null) {
+            logger.debug("无法定位服务端日志文件（进程未运行且未配置 log-path）");
+            return newLines;
+        }
+        String logPath = resolvedLog.toString();
+
         try (BufferedReader reader = new BufferedReader(new FileReader(logPath))) {
             reader.skip(lastReadPosition);
             String line;

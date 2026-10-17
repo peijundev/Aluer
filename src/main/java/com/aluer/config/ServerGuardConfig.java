@@ -37,7 +37,8 @@ public class ServerGuardConfig {
         private String processName = "";
         /** 服务器 JAR 文件名关键词；留空则自动识别，不绑定具体平台与版本 */
         private String jarFile = "";
-        private String workingDir = "/opt/minecraft";
+        /** 服务端工作目录；留空则通过进程定位器自动寻找真实目录，不写死路径 */
+        private String workingDir = "";
         private String javaOpts = "-Xms4G -Xmx4G";
         private int checkIntervalSeconds = 5;
         /** 是否在引擎启动时自动注入 Agent 插件到服务端 plugins 目录 */
@@ -88,7 +89,8 @@ public class ServerGuardConfig {
         private double memoryThreshold = 85.0;
         private int connectionThreshold = 50;
         private int logWatchLines = 100;
-        private String logPath = "/opt/minecraft/logs/latest.log";
+        /** 日志文件路径；留空则自动推导为「真实工作目录/logs/latest.log」 */
+        private String logPath = "";
 
         public int getTpsThreshold() { return tpsThreshold; }
         public void setTpsThreshold(int tpsThreshold) { this.tpsThreshold = tpsThreshold; }

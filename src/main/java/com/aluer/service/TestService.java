@@ -222,12 +222,19 @@ public class TestService {
         TestResult result = new TestResult("Log Monitor");
         
         try {
+            // 展示真实日志路径：显式配置优先，否则按进程工作目录自动推导（不写死路径）
             String logPath = config.getMonitor().getLogPath();
+            if (logPath == null || logPath.isBlank()) {
+                logPath = MinecraftProcessDetector.findProcessInfo(config)
+                        .map(MinecraftProcessDetector.ProcessInfo::getWorkingDirectory)
+                        .map(wd -> wd + "/logs/latest.log")
+                        .orElse("(无法定位)");
+            }
             result.addDetail("Log path: " + logPath);
-            
+
             var newLines = logMonitor.watchLogs();
             result.addDetail("New log lines: " + newLines.size());
-            
+
             result.pass();
             
         } catch (Exception e) {

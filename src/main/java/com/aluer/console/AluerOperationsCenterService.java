@@ -9,6 +9,7 @@ import com.aluer.kernel.AluerKernelEngine;
 import com.aluer.kernel.AluerKernelTaskBus;
 import com.aluer.kernel.AluerSelfHealingOrchestrator;
 import com.aluer.model.MetricsData;
+import com.aluer.monitor.MinecraftProcessDetector;
 import com.aluer.monitor.ProcessMonitor;
 import com.aluer.monitor.ResourceMonitor;
 import com.aluer.network.CloudflareIntegrationService;
@@ -107,7 +108,11 @@ public class AluerOperationsCenterService {
 
         Map<String, Object> server = new LinkedHashMap<>();
         server.put("serviceName", config.getMinecraft().getServiceName());
-        server.put("workingDir", config.getMinecraft().getWorkingDir());
+        // 展示真实工作目录：进程定位器发现优先，配置兜底（不写死路径）
+        server.put("workingDir", MinecraftProcessDetector.findProcessInfo(config)
+                .map(MinecraftProcessDetector.ProcessInfo::getWorkingDirectory)
+                .filter(s -> s != null && !s.isBlank())
+                .orElse(config.getMinecraft().getWorkingDir()));
         server.put("processRunning", processMonitor.isProcessRunning());
         server.put("rconConnected", rconClient.isConnected());
         server.put("metrics", Map.of(

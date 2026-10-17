@@ -13,7 +13,8 @@ serverguard:
     # 进程/JAR 匹配关键词：留空则由进程定位器按已知核心名（paper/spigot/purpur/folia/forge/fabric 等）自动识别
     process-name: ""
     jar-file: ""
-    working-dir: /opt/minecraft
+    # 服务端工作目录：留空则自动寻找运行中服务端的真实目录（不写死路径）
+    working-dir: ${SERVERGUARD_WORKING_DIR:}
     # 启动时自动注入监控 Agent 插件到服务端 plugins/ 目录
     auto-inject: true
     agent-jar-name: serverguard-agent.jar
@@ -31,7 +32,8 @@ serverguard:
     memory-threshold: 85.0
     connection-threshold: 50
     log-watch-lines: 100
-    log-path: /opt/minecraft/logs/latest.log
+    # 日志文件路径：留空则自动推导为「真实工作目录/logs/latest.log」
+    log-path: ${SERVERGUARD_LOG_PATH:}
 
   alert:
     enabled: true
