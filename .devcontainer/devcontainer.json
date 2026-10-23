@@ -1,0 +1,45 @@
+{
+  "name": "Aluer ServerGuard",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "username": "vscode",
+      "upgradePackages": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+
+  "remoteUser": "vscode",
+
+  "forwardPorts": [8080, 4173, 25565, 25575],
+  "portsAttributes": {
+    "8080": { "label": "Web Console / Agent WS", "onAutoForward": "notify" },
+    "4173": { "label": "Vite Dev Server", "onAutoForward": "silent" },
+    "25565": { "label": "Minecraft", "onAutoForward": "silent" },
+    "25575": { "label": "RCON", "onAutoForward": "silent" }
+  },
+
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "automatic"
+      }
+    }
+  }
+}
