@@ -1,0 +1,81 @@
+# Aluer ServerGuard — 引擎 Deployment
+# 用法：kubectl apply -f k8s/deployment.yaml
+#
+# 说明：
+#   - 单副本部署。引擎依赖本机进程/文件系统状态，多副本需额外的共享协调，暂不支持。
+#   - 默认以 root 运行（进程扫描、/proc 探测、网络嗅探等主机级模块需要高权限）。
+#   - 容器化下主机级模块（进程扫描/ARP 欺骗检测/网络嗅探）能力受限，
+#     详见 docs/Docker_K8S部署.md「容器化能力边界」一节。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serverguard
+  namespace: aluer
+  labels:
+    app: serverguard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serverguard
+  template:
+    metadata:
+      labels:
+        app: serverguard
+    spec:
+      # 引擎需要读取 /proc、绑定低位端口等，使用默认（root）安全上下文；
+      # 若启用主机级网络嗅探，请额外开启 privileged + hostNetwork。
+      containers:
+        - name: serverguard
+          image: aluer/serverguard:5.2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: serverguard-config
+            - secretRef:
+                name: serverguard-secret
+          volumeMounts:
+            - name: data
+              mountPath: /var/log
+              subPath: logs
+            - name: data
+              mountPath: /opt/serverguard/reports
+              subPath: reports
+            - name: data
+              mountPath: /opt/serverguard/serverguard
+              subPath: plugins
+          # 存活探针：进程可响应即存活（始终返回 200 / status: UP）
+          livenessProbe:
+            httpGet:
+              path: /api/health/live
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # 就绪探针：Spring 上下文就绪、能处理请求即视为就绪
+          # 注意：业务侧 RCON 连通性见响应体 status 字段（READY/NOT_READY），
+          # 该端点始终返回 HTTP 200，因此这里只代表「进程可服务」。
+          readinessProbe:
+            httpGet:
+              path: /api/health/ready
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: serverguard-data

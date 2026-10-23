@@ -1,0 +1,19 @@
+# Aluer ServerGuard — 持久化卷（PVC）
+# 引擎写三类数据，均挂载到本 PVC 的不同子目录：
+#   - logs    ：引擎日志（/var/log/serverguard.log）
+#   - reports ：攻击报告（./reports）
+#   - plugins ：第三方插件（serverguard/plugins）
+# 用法：kubectl apply -f k8s/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverguard-data
+  namespace: aluer
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  # 依据你的存储类调整，例如：
+  # storageClassName: standard

@@ -1,0 +1,66 @@
+# =============================================================================
+# Aluer ServerGuard — Docker Compose 部署（External 模式示例）
+#
+# 本示例同时启动：
+#   - aluer-serverguard：ServerGuard 引擎（Spring Boot，端口 8080）
+#   - aluer-minecraft  ：Paper 1.21.1 服务端（itzg/minecraft-server，开启 RCON）
+#
+# 引擎通过 RCON 连接 Minecraft 服务端进行外部监控（零侵入，无需装插件）。
+# 启动后访问 Web 控制台：http://localhost:8080
+#
+# 注意：生产环境请务必修改 RCON_PASSWORD 与各密钥。
+# =============================================================================
+
+services:
+  serverguard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: aluer/serverguard:5.2.0
+    container_name: aluer-serverguard
+    ports:
+      - "8080:8080"                       # Web 控制台 + Agent WebSocket
+    environment:
+      # 运行模式：external（外部 RCON 监控）
+      SERVERGUARD_MODE: external
+      # RCON 连接参数（覆盖 application.yml 默认的 localhost）
+      SERVERGUARD_MINECRAFT_RCON_HOST: minecraft
+      SERVERGUARD_MINECRAFT_RCON_PORT: "25575"
+      RCON_PASSWORD: change-me-please
+      # DeepSeek AI（可选，不配置则 AI 自动禁用）
+      # DEEPSEEK_API_KEY: sk-xxxxxxxx
+      # DEEPSEEK_MODEL: deepseek-chat
+      # 邮件告警（可选）
+      # ALUER_ALERT_SMTP_USERNAME: your@example.com
+      # ALUER_ALERT_SMTP_PASSWORD: your-smtp-password
+      # ALUER_ALERT_EMAIL_PRIMARY: admin@example.com
+    volumes:
+      - serverguard-reports:/opt/serverguard/reports        # 攻击报告持久化
+      - serverguard-plugins:/opt/serverguard/serverguard    # 第三方插件持久化
+      - serverguard-logs:/var/log                           # 引擎日志持久化
+    restart: unless-stopped
+    depends_on:
+      - minecraft
+
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: aluer-minecraft
+    ports:
+      - "25565:25565"                     # Minecraft 游戏端口
+    environment:
+      EULA: "TRUE"
+      TYPE: PAPER
+      VERSION: "1.21.1"
+      MEMORY: "4G"
+      ENABLE_RCON: "true"
+      RCON_PORT: "25575"
+      RCON_PASSWORD: change-me-please
+    volumes:
+      - minecraft-data:/data              # Minecraft 世界与配置持久化
+    restart: unless-stopped
+
+volumes:
+  serverguard-reports:
+  serverguard-plugins:
+  serverguard-logs:
+  minecraft-data:

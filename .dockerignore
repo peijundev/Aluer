@@ -1,0 +1,29 @@
+# Git 与 IDE
+.git
+.gitignore
+.idea
+*.iml
+
+# 构建产物与依赖
+target
+frontend/node_modules
+
+# 本地捆绑的 Maven（Docker 内使用官方 maven 镜像，无需打包）
+apache-maven-3.9.6
+maven.zip
+
+# 运行时产生的本地文件
+forensics
+reports
+spring-shell.log
+serverguard
+*.log
+
+# 部署与文档（不影响 jar 构建）
+systemd
+docs
+install.sh
+start.sh
+
+# 本地配置文件
+*.local

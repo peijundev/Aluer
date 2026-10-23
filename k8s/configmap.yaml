@@ -1,0 +1,24 @@
+# Aluer ServerGuard — 非敏感配置（ConfigMap）
+# 通过环境变量注入，覆盖 src/main/resources/application.yml 中的默认值。
+# 用法：kubectl apply -f k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: serverguard-config
+  namespace: aluer
+data:
+  # 运行模式：external（外部 RCON 监控，最适合容器化）
+  SERVERGUARD_MODE: "external"
+
+  # RCON 连接参数（覆盖 application.yml 默认的 localhost:25575）
+  # 指向 Minecraft 服务端所在地址（Service 名 / 外部 IP / 域名）
+  SERVERGUARD_MINECRAFT_RCON_ENABLED: "true"
+  SERVERGUARD_MINECRAFT_RCON_HOST: "minecraft-service"
+  SERVERGUARD_MINECRAFT_RCON_PORT: "25575"
+
+  # 系统服务名（用于进程保活/自动重启逻辑，容器内通常留空）
+  SERVERGUARD_MINECRAFT_SERVICE_NAME: ""
+
+  # DeepSeek AI（非敏感部分；密钥见 secret.yaml）
+  DEEPSEEK_BASE_URL: "https://api.deepseek.com"
+  DEEPSEEK_MODEL: "deepseek-chat"
