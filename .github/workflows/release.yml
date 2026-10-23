@@ -2,7 +2,8 @@ name: Release
 
 # 发布自动化：推送 v* 标签时，构建前端 + 编译 + 跑全量测试 + 打包，
 # 并将 serverguard.jar 作为附件发布到 GitHub Release。
-# 注意：使用 gh release create 手动创建 Release 不会触发本工作流（API 建 tag 不产生 push 事件）。
+# 注意：推送标签（包括 gh release create 在内）都会触发本工作流，
+# 因此不要再手动用 gh release create 发布同一标签，避免重复创建与附件冲突。
 on:
   push:
     tags:
