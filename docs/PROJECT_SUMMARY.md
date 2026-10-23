@@ -1,4 +1,4 @@
-# Aluer ServerGuard V5.0 -- 项目总览与模块拆解
+# Aluer ServerGuard V5.2 -- 项目总览与模块拆解
 
 > 本文档提供 Aluer ServerGuard 项目的宏观总览，包括完整模块清单、技术栈、性能特征和安全覆盖矩阵。
 
@@ -9,7 +9,7 @@
 | 属性 | 值 |
 |------|-----|
 | 项目名称 | Aluer ServerGuard |
-| 当前版本 | V5.0 (V5.3 子版本) |
+| 当前版本 | V5.2.0 |
 | 构建工具 | Apache Maven 3.9.6 (bundled) |
 | 代码语言 | Java 21 |
 | 应用框架 | Spring Boot 3.2.0 |
@@ -417,9 +417,7 @@
 
 | 版本 | 日期 | 里程碑 |
 |------|------|--------|
-| V5.3 | 2026-05 | 完成 Meteor Client World/Player/Misc 全量对抗 |
-| V5.2 | 2026-05 | 完成 Meteor Client Movement 全量对抗 |
-| V5.1 | 2026-05 | 完成 Meteor Client Combat 全量对抗 |
-| V5.0 | 2026-04 | Agent 架构重构，WebSocket 实时通信 |
+| V5.2 | 2026-10 | 多平台/多版本支持 · 插件系统 · Agent 自动注入与周期补注入 · Grim/NoCheatPlus 融合 · PacketEvents · 进程/文件安全扫描 · 进程定位器 · CI/CD |
+| V5.0 | 2026-05 | Agent 架构重构，WebSocket 实时通信 · 151 文件安全模块分包 · 全类型外挂对抗（64 模块） |
 | V4.0 | 2026-03 | 基础反作弊框架（KillAura, Reach, Speed 等） |
 | V1.0-V3.0 | 2025-2026 | 系统监控、基础防护、告警系统 |

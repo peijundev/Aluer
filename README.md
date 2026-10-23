@@ -26,6 +26,7 @@
   <a href="#多平台多版本支持">多平台支持</a> ·
   <a href="#插件系统">插件系统</a> ·
   <a href="#部署指南">部署指南</a> ·
+  <a href="docs/Docker_K8S部署.md">Docker/K8S</a> ·
   <a href="#配置参考">配置参考</a> ·
   <a href="#外挂对抗覆盖矩阵">外挂覆盖</a> ·
   <a href="#常见问题">FAQ</a> ·
@@ -133,11 +134,8 @@ cd Aluer
 
 | 版本 | 日期 | 核心更新 |
 |------|------|----------|
-| **V5.4** | 2026-10 | 多平台/多版本支持（Spigot/Paper/Purpur/Folia 1.12.2+）· ServerGuard 插件系统 · Agent 自动注入与周期补注入 · 融合 Grim（BadPackets/AimModulo360/GroundSpoof）与 NoCheatPlus（NoSwing/GodMode/FastHeal/NoWeb/FastLadder）· PacketEvents 依赖 · 进程/文件安全扫描 · 进程定位器 |
-| **V5.3** | 2026-05 | 世界/玩家/杂物类外挂对抗：SpeedMine · FastUse · NoInteract · AutoMine · VeinMiner · AutoTool · FakePlayer · PistonAura · Anchor · StashFinder |
-| **V5.2** | 2026-05 | 移动类外挂全对抗：NoSlow · Spider · Step · PacketFly · AirJump · LongJump · AntiHunger · FastFall · VClip · NoFall 增强 |
-| **V5.1** | 2026-05 | 战斗类外挂全对抗：Criticals · AutoCrystal · AutoTotem · Surround · AutoTrap · AutoArmor · ChestSwap · AutoLog · Hitboxes · BowAimbot |
-| **V5.0** | 2026-04 | Agent WebSocket 架构重构 · Timer · Velocity · Phase · Blink · FastBreak · ElytraFly · AI/ML 行为分析 4 模块 · 网络安全 5 模块 · 服务器保护 4 模块 |
+| **V5.2** | 2026-10 | 多平台/多版本支持（Spigot/Paper/Purpur/Folia 1.12.2+）· ServerGuard 插件系统 · Agent 自动注入与周期补注入 · 融合 Grim（BadPackets/AimModulo360/GroundSpoof）与 NoCheatPlus（NoSwing/GodMode/FastHeal/NoWeb/FastLadder）· PacketEvents 依赖 · 进程/文件安全扫描 · 进程定位器 · GitHub Actions CI 与自动发布 |
+| **V5.0** | 2026-05 | Agent WebSocket 架构重构 · 151 文件安全模块分包 · 全类型外挂对抗（战斗/移动/世界/玩家 64 模块）· AI/ML 行为分析 · 网络安全 · 服务器漏洞防护 |
 | **V4.0** | 2026-03 | 29 模块安全大扩展：KillAura · Reach · Speed · Jesus · NoFall · Scaffold · Nuker · AutoClicker · 玩家行为 · 服务器保护 · 聊天安全 · 访问控制 |
 
 ---
@@ -146,7 +144,7 @@ cd Aluer
 
 ```
 +---------------------------------------------------------------------------+
-|                        Aluer ServerGuard V5.0 系统架构                       |
+|                        Aluer ServerGuard V5.2 系统架构                       |
 +---------------------------------------------------------------------------+
 |                                                                            |
 |   +----------------------------+          WebSocket           +--------------------------+
@@ -387,7 +385,7 @@ cd Aluer
 | 8 | `AntiBotDetectionService` | Bot（机器人） | 命名模式 · 加入速率 · 行为熵值 |
 | 9 | `AntiBadPacketsService` | BadPackets（恶意数据包，Grim） | 重复 held item slot / 未睡觉却发送起床 / pitch 越界 / 连续移动包无位置更新 / 重复 sprint 状态 |
 
-### 服务器漏洞防护（`server`，7 模块）
+### 服务器漏洞防护（`server`，6 模块）
 
 | # | 模块类名 | 防护对象 |
 |---|---------|---------|
@@ -397,7 +395,6 @@ cd Aluer
 | 4 | `AntiTabCompleteCrashService` | Tab 补全崩溃（长文本 / 深度嵌套补全限制） |
 | 5 | `CrashExploitProtectionService` | 崩溃漏洞防护（超大包 / NBT 炸弹 / 书与笔攻击） |
 | 6 | `LagMachineDetectionService` | 卡服机检测（Observer 链 / TNT 堆 / 红石密度） |
-| 7 | `PacketFloodProtectionService` | 数据包洪水防护（每玩家每秒 200 包上限，超限踢出） |
 
 ### 纵深防御（`defense`，58 模块）
 
@@ -654,6 +651,24 @@ java -jar serverguard.jar
 | 模块覆盖 | 全部 170+ 模块 | 外部监控模块（约 40 模块） |
 | 推荐场景 | **生产服务器（首选）** | 评测 / 临时监控 / 测试 |
 
+### Docker / Kubernetes 部署
+
+项目内置容器化部署支持（`Dockerfile` · `.dockerignore` · `docker-compose.yml` · `k8s/`），适合 External 模式容器化部署：
+
+```bash
+# 构建镜像
+docker build -t aluer/serverguard:5.2.0 .
+
+# Docker Compose 一键编排（引擎 + Paper 服务端）
+docker compose up -d --build
+
+# Kubernetes 部署（External 模式）
+kubectl create namespace aluer
+kubectl apply -f k8s/
+```
+
+> **容器化能力边界**：引擎内置的进程扫描 / 网络嗅探 / ARP 检测等主机级模块在容器内受限（只能看到容器自身），External 模式（RCON 远程监控 + 网络层防护）与 Agent 模式（WebSocket 通信）可完整容器化。详见 [`docs/Docker_K8S部署.md`](docs/Docker_K8S部署.md)。
+
 ---
 
 ## 配置参考
@@ -798,6 +813,19 @@ Agent Plugin 模式提供以下游戏内管理命令：
 ./apache-maven-3.9.6/bin/mvn clean
 ```
 
+### CI/CD 自动化
+
+项目内置 GitHub Actions 工作流（`.github/workflows/`）：
+
+- **`ci.yml`**：推送到 `main` 或发起 PR 时触发，构建前端 → `mvn clean test` 跑全量测试 → 上传 surefire 测试报告。
+- **`release.yml`**：推送 `v*` 标签时触发，构建前端 → `mvn clean package`（含全量测试）→ 自动创建 GitHub Release 并附上 `serverguard.jar`。
+
+### 一键部署脚本
+
+- **`install.sh`**：一键安装脚本，创建 systemd 服务并启动（`sudo bash install.sh`）。
+- **`start.sh`**：快速启动脚本，`nohup` 后台运行引擎并输出日志。
+- **`systemd/`**：预置 `serverguard.service` / `minecraft.service` / `sudoers.serverguard` 单元文件。
+
 ### 测试统计
 
 | 指标 | 数值 |
@@ -878,6 +906,14 @@ Aluer/
 ├── README.md                                  # 项目说明文档（中文·本文件）
 ├── README_EN.md                               # 项目说明文档（英文）
 ├── logo.png                                   # 项目 Logo
+├── install.sh                                 # 一键安装脚本（systemd 部署）
+├── start.sh                                   # 快速启动脚本
+├── systemd/                                   # systemd 服务单元（serverguard / minecraft / sudoers）
+├── Dockerfile                                 # 多阶段 Docker 构建（前端 → Maven → JRE）
+├── .dockerignore                              # Docker 构建上下文精简
+├── docker-compose.yml                         # Docker Compose 编排（External 模式示例）
+├── k8s/                                       # Kubernetes 清单（ConfigMap/Secret/PVC/Deployment/Service）
+├── .github/workflows/                         # GitHub Actions CI 与自动发布工作流
 ├── docs/
 │   ├── DEVELOPER.md                           # 开发者参考手册
 │   ├── PROJECT_SUMMARY.md                     # 项目总览与模块拆解

@@ -2,7 +2,7 @@ name: AluerServerGuard
 version: 5.2.0
 main: com.aluer.plugin.AluerPlugin
 api-version: '1.12'
-description: AI-powered Minecraft multi-platform Server Protection System — 29 anti-cheat modules, DDoS defense, WAF, kernel-based threat fusion. Supports Spigot/Paper/Purpur/Folia and Minecraft 1.12.2+.
+description: AI-powered Minecraft multi-platform Server Protection System — 64 anti-cheat modules, DDoS defense, WAF, kernel-based threat fusion. Supports Spigot/Paper/Purpur/Folia and Minecraft 1.12.2+.
 author: Aluer
 website: https://github.com/peijundev/Aluer/
 load: STARTUP

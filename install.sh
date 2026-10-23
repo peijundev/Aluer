@@ -13,11 +13,11 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # 1. 安装Java
-echo "[1/5] 正在安装 Java 17..."
+echo "[1/5] 正在安装 Java 21..."
 if command -v java &> /dev/null; then
     echo "Java已安装: $(java -version 2>&1 | head -1)"
 else
-    apt update && apt install openjdk-17-jdk -y
+    apt update && apt install openjdk-21-jdk -y
     echo "Java 安装完成"
 fi
 

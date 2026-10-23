@@ -1,4 +1,4 @@
-# Aluer ServerGuard V5.0 -- 用户手册
+# Aluer ServerGuard V5.2 -- 用户手册
 
 ## 目录
 
@@ -105,7 +105,7 @@ java -Xms4G -Xmx4G -jar paper-1.21.11.jar
 
 查看 Minecraft 控制台输出，应该看到：
 ```
-[AluerServerGuard] Aluer ServerGuard Agent v5.0.0
+[AluerServerGuard] Aluer ServerGuard Agent v5.2.0
 [AluerServerGuard] 轻量数据采集前端 - 连接外部 ServerGuard 引擎
 [AluerServerGuard] WebSocket connected to ws://localhost:8080/agent
 ```

@@ -120,7 +120,7 @@ public class AdminCommands {
     public String serverStatus() {
         StringBuilder sb = new StringBuilder();
         sb.append(boxHeader("Aluer ServerGuard 引擎状态"));
-        sb.append(row("版本", "V5.0.0"));
+        sb.append(row("版本", "V5.2.0"));
         sb.append(row("运行模式", config.isPluginMode() ? "Agent Plugin 模式" : "External 外部监控模式"));
         sb.append(row("Java 版本", System.getProperty("java.version")));
         sb.append(row("可用核心", String.valueOf(Runtime.getRuntime().availableProcessors())));

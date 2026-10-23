@@ -53,7 +53,7 @@ public class AluerPlugin extends JavaPlugin {
     public void onLoad() {
         instance = this;
         logger.info("══════════════════════════════════════════════");
-        logger.info("  Aluer ServerGuard Agent v5.0.0");
+        logger.info("  Aluer ServerGuard Agent v5.2.0");
         logger.info("  轻量数据采集前端 — 连接外部 ServerGuard 引擎");
         logger.info("══════════════════════════════════════════════");
     }

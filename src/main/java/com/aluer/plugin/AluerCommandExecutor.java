@@ -59,7 +59,7 @@ public class AluerCommandExecutor implements CommandExecutor, TabCompleter {
     }
 
     private boolean handleStatus(CommandSender sender) {
-        sender.sendMessage(P + ChatColor.YELLOW + "═══ Aluer Agent v5.0.0 ═══");
+        sender.sendMessage(P + ChatColor.YELLOW + "═══ Aluer Agent v5.2.0 ═══");
         sender.sendMessage(P + "Server: " + (plugin.isServerConnected() ? ChatColor.GREEN + "已连接" : ChatColor.RED + "未连接"));
         sender.sendMessage(P + "TPS: " + ChatColor.AQUA + String.format("%.1f", getTPS()));
         sender.sendMessage(P + "在线: " + ChatColor.AQUA + Bukkit.getServer().getOnlinePlayers().size());
@@ -121,7 +121,7 @@ public class AluerCommandExecutor implements CommandExecutor, TabCompleter {
     }
 
     private boolean handleInfo(CommandSender sender) {
-        sender.sendMessage(P + ChatColor.GOLD + "Aluer ServerGuard Agent v5.0.0");
+        sender.sendMessage(P + ChatColor.GOLD + "Aluer ServerGuard Agent v5.2.0");
         sender.sendMessage(P + ChatColor.GRAY + "轻量数据采集前端 — 连接外部 ServerGuard 引擎");
         sender.sendMessage(P + "Server: " + (plugin.isServerConnected() ? ChatColor.GREEN + "已连接" : ChatColor.RED + "未连接"));
         return true;
