@@ -8,7 +8,7 @@ ${AnsiColor.BRIGHT_CYAN}    ╔════════════════�
     ║      ██║  ██║███████╗╚██████╔╝███████╗██║  ██║            ║
     ║      ╚═╝  ╚═╝╚══════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝            ║
     ║                                                            ║
-    ║       ${AnsiColor.BRIGHT_YELLOW}Aluer ServerGuard V5.0.0${AnsiColor.BRIGHT_CYAN}                        ║
+    ║       ${AnsiColor.BRIGHT_YELLOW}Aluer ServerGuard V5.2.0${AnsiColor.BRIGHT_CYAN}                        ║
     ║       ${AnsiColor.BRIGHT_GREEN}AI-Powered Minecraft Multi-Platform Protection${AnsiColor.BRIGHT_CYAN}    ║
     ║       ${AnsiColor.BRIGHT_MAGENTA}由Peijun Zhao倾情奉献，有Apache Maven强力构建${AnsiColor.BRIGHT_CYAN}      ║
     ║                                                            ║

@@ -29,7 +29,7 @@ public class ServerGuardApplication {
             }
         }, "serverguard-shutdown-hook"));
 
-        logger.info("Aluer ServerGuard v5.0.0 is ready");
+        logger.info("Aluer ServerGuard v5.2.0 is ready");
         logger.info("Agent WebSocket endpoint: ws://0.0.0.0:{}/agent", context.getEnvironment().getProperty("server.port", "8080"));
     }
 

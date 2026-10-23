@@ -2,7 +2,7 @@
   <img src="logo.png" alt="Aluer ServerGuard" width="180">
 </p>
 
-<h1 align="center">Aluer ServerGuard V5.0</h1>
+<h1 align="center">Aluer ServerGuard V5.2.0</h1>
 
 <p align="center">
   <b>AI-Powered Minecraft PaperMC Server Protection System</b><br>
@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ZpjDev/Aluer/releases/latest"><img src="https://img.shields.io/github/v/release/ZpjDev/Aluer?style=for-the-badge&color=6366f1" alt="Latest Release"></a>
-  <a href="#"><img src="https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge" alt="Build"></a>
+  <a href="https://github.com/peijundev/Aluer/releases/latest"><img src="https://img.shields.io/github/v/release/peijundev/Aluer?style=for-the-badge&color=6366f1" alt="Latest Release"></a>
+  <a href="https://github.com/peijundev/Aluer/actions/workflows/ci.yml"><img src="https://github.com/peijundev/Aluer/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="#"><img src="https://img.shields.io/badge/tests-456%2F456-green?style=for-the-badge" alt="Tests"></a>
   <a href="#"><img src="https://img.shields.io/badge/Java-21-red?style=for-the-badge&logo=openjdk" alt="Java 21"></a>
   <a href="#"><img src="https://img.shields.io/badge/Minecraft-1.12.2%2B-blue?style=for-the-badge" alt="Minecraft 1.12.2+"></a>
@@ -63,7 +63,7 @@ Aluer ServerGuard is a **next-generation intelligent security system** for Minec
 
 ```bash
 # Download latest release
-wget https://github.com/ZpjDev/Aluer/releases/latest/download/serverguard.jar
+wget https://github.com/peijundev/Aluer/releases/latest/download/serverguard.jar
 
 # Start (External mode, ready out of the box)
 java -jar serverguard.jar
@@ -90,7 +90,7 @@ cd /opt/minecraft && java -Xms4G -Xmx4G -jar paper-1.21.1.jar nogui
 ### Build from Source
 
 ```bash
-git clone https://github.com/ZpjDev/Aluer.git && cd Aluer
+git clone https://github.com/peijundev/Aluer.git && cd Aluer
 ./apache-maven-3.9.6/bin/mvn compile      # Compile 225 source files
 ./apache-maven-3.9.6/bin/mvn test          # Run 456 tests
 ./apache-maven-3.9.6/bin/mvn package -DskipTests  # Build JAR (~63MB)
@@ -278,7 +278,7 @@ Layered design minimizes false bans: immediate interception only at physically i
 
 | Contributor | GitHub | Role |
 |------------|--------|------|
-| Peijun Zhao | [@ZpjDev](https://github.com/ZpjDev) | Architecture Design & Core Development |
+| Peijun Zhao | [@peijundev](https://github.com/peijundev) | Architecture Design & Core Development |
 
 ---
 
@@ -288,6 +288,6 @@ Layered design minimizes false bans: immediate interception only at physically i
 
 <p align="center">
   <br>
-  <b>Aluer ServerGuard V5.0</b><br>
+  <b>Aluer ServerGuard V5.2.0</b><br>
   <sub>Protecting Every Minecraft Server</sub>
 </p>

@@ -1008,7 +1008,7 @@ public class AntiKillAuraService {
 
 ```
 target/
-├── serverguard-4.0.0.jar              # 可执行 JAR（Spring Boot Fat JAR）
+├── serverguard.jar              # 可执行 JAR（Spring Boot Fat JAR）
 ├── classes/                            # 编译后的 .class 文件
 ├── test-classes/                       # 测试编译产物
 ├── generated-sources/                  # 注解处理器生成
@@ -1017,6 +1017,6 @@ target/
 
 ### 部署产物说明
 
-- `serverguard-4.0.0.jar` 是 Spring Boot 可执行 JAR，包含所有依赖
+- `serverguard.jar` 是 Spring Boot 可执行 JAR，包含所有依赖
 - 同时作为 Paper 插件使用（复制到 `plugins/` 目录）
 - Plugin 模式下，AluerPlugin 作为 Paper 插件启动，但不启动嵌入的 Spring Boot（由外部引擎独立运行）

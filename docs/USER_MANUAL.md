@@ -69,7 +69,7 @@ cd /opt/AluerIII
 **步骤 2：安装插件**
 
 ```bash
-cp target/serverguard-4.0.0.jar /opt/minecraft/plugins/AluerServerGuard.jar
+cp target/serverguard.jar /opt/minecraft/plugins/AluerServerGuard.jar
 ```
 
 **步骤 3：创建插件配置** `/opt/minecraft/plugins/AluerServerGuard/config.yml`：
@@ -91,7 +91,7 @@ export RCON_PASSWORD="your-rcon-password"
 **步骤 5：启动 ServerGuard 引擎**
 
 ```bash
-java -jar target/serverguard-4.0.0.jar
+java -jar target/serverguard.jar
 ```
 
 **步骤 6：启动 Minecraft 服务器**
@@ -150,7 +150,7 @@ rcon.password=your-rcon-password-here
 **步骤 4：启动 ServerGuard**
 
 ```bash
-java -jar target/serverguard-4.0.0.jar
+java -jar target/serverguard.jar
 ```
 
 ---

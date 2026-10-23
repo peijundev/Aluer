@@ -2,7 +2,7 @@
   <img src="logo.png" alt="Aluer ServerGuard" width="180">
 </p>
 
-<h1 align="center">Aluer ServerGuard V5.0</h1>
+<h1 align="center">Aluer ServerGuard V5.2.0</h1>
 
 <p align="center">
   <b>AI 驱动的 Minecraft 多平台服务器全方位安全防护系统</b><br>
@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ZpjDev/Aluer/releases/latest"><img src="https://img.shields.io/github/v/release/ZpjDev/Aluer?style=for-the-badge&color=6366f1" alt="Latest Release"></a>
-  <a href="#"><img src="https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge" alt="Build Status"></a>
+  <a href="https://github.com/peijundev/Aluer/releases/latest"><img src="https://img.shields.io/github/v/release/peijundev/Aluer?style=for-the-badge&color=6366f1" alt="Latest Release"></a>
+  <a href="https://github.com/peijundev/Aluer/actions/workflows/ci.yml"><img src="https://github.com/peijundev/Aluer/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="#"><img src="https://img.shields.io/badge/tests-456%2F456-green?style=for-the-badge" alt="Tests"></a>
   <a href="#"><img src="https://img.shields.io/badge/Java-21-red?style=for-the-badge&logo=openjdk" alt="Java 21"></a>
   <a href="#"><img src="https://img.shields.io/badge/Minecraft-1.12.2%2B-blue?style=for-the-badge" alt="Minecraft 1.12.2+"></a>
@@ -76,7 +76,7 @@ Aluer ServerGuard 是一款**专为 Minecraft 服务器打造的新一代智能�
 
 ```bash
 # 下载最新版本
-wget https://github.com/ZpjDev/Aluer/releases/latest/download/serverguard.jar
+wget https://github.com/peijundev/Aluer/releases/latest/download/serverguard.jar
 
 # 启动（External 模式，开箱即用）
 java -jar serverguard.jar
@@ -112,7 +112,7 @@ java -Xms4G -Xmx4G -jar paper-1.21.1.jar nogui
 
 ```bash
 # 环境要求：Java 21+
-git clone https://github.com/ZpjDev/Aluer.git
+git clone https://github.com/peijundev/Aluer.git
 cd Aluer
 
 # 编译（强制 clean，禁止增量编译）
@@ -561,7 +561,7 @@ Aluer ServerGuard 实现对主流 Minecraft 外挂客户端全类型 hack 模块
 java -jar serverguard.jar
 # 输出：
 # ╔══════════════════════════════════════════════════════════════╗
-# ║          Aluer ServerGuard V5.0.0                           ║
+# ║          Aluer ServerGuard V5.2.0                           ║
 # ║          Mode: Agent Server (WebSocket)                     ║
 # ║          Agent WS: ws://0.0.0.0:8080/agent                 ║
 # ║          Web Console: http://0.0.0.0:8080/                 ║
@@ -594,7 +594,7 @@ java -Xms4G -Xmx4G -jar paper-1.21.1.jar nogui
 
 # Agent 启动日志：
 # [AluerServerGuard] ═════════════════════════════════════════════
-# [AluerServerGuard]   Aluer ServerGuard Agent v5.0.0
+# [AluerServerGuard]   Aluer ServerGuard Agent v5.2.0
 # [AluerServerGuard]   轻量数据采集前端 - 连接外部 ServerGuard 引擎
 # [AluerServerGuard] ═════════════════════════════════════════════
 # [AluerServerGuard] Agent a1b2c3d4 connected to ServerGuard successfully
@@ -1068,7 +1068,7 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 
 | 贡献者 | GitHub | 角色 |
 |--------|--------|------|
-| Peijun Zhao | [@ZpjDev](https://github.com/ZpjDev) | 架构设计、核心开发、全部安全模块实现 |
+| Peijun Zhao | [@peijundev](https://github.com/peijundev) | 架构设计、核心开发、全部安全模块实现 |
 
 ---
 
@@ -1097,7 +1097,7 @@ GNU General Public License for more details.
 
 <p align="center">
   <br>
-  <b>Aluer ServerGuard V5.0</b><br>
+  <b>Aluer ServerGuard V5.2.0</b><br>
   <sub>AI-Powered Minecraft Multi-Platform Server Protection</sub><br>
   <sub>保护每一台 Minecraft 服务器</sub>
 </p>

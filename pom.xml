@@ -6,12 +6,12 @@
 
     <groupId>com.aluer</groupId>
     <artifactId>serverguard</artifactId>
-    <version>4.0.0</version>
+    <version>5.2.0</version>
     <packaging>jar</packaging>
 
     <name>Aluer ServerGuard</name>
     <description>AI-powered multi-platform Minecraft Server Protection System (Spigot/Paper/Purpur/Folia, Minecraft 1.12.2+)</description>
-    <url>https://github.com/ZpjDev/Aluer</url>
+    <url>https://github.com/peijundev/Aluer</url>
     <licenses>
         <license>
             <name>GNU General Public License v3.0</name>
