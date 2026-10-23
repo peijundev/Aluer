@@ -1105,6 +1105,8 @@ External 模式适合不想安装插件的临时评测或已有其他反作弊�
 | 贡献者 | GitHub | 角色 |
 |--------|--------|------|
 | Peijun Zhao | [@peijundev](https://github.com/peijundev) | 架构设计、核心开发、全部安全模块实现 |
+| Charlotte Yu | [@insudsobs](https://github.com/insudsobs) |项目提出者，最初版本编写者|
+
 
 ---
 
