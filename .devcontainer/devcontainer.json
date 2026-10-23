@@ -4,18 +4,6 @@
     "dockerfile": "Dockerfile"
   },
 
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": true,
-      "configureZshAsDefaultShell": true,
-      "username": "vscode",
-      "upgradePackages": true
-    },
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "20"
-    }
-  },
-
   "remoteUser": "vscode",
 
   "forwardPorts": [8080, 4173, 25565, 25575],
