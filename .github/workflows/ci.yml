@@ -18,7 +18,7 @@ jobs:
 
       # Java 21 与项目要求一致（Spring Boot 3.2.0 + PaperMC 1.21.1）
       - name: 安装 JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
